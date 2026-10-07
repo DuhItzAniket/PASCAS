@@ -48,6 +48,7 @@ type
     constructor Create;
     procedure SetVar(const Name: string; Value: Double);
     function GetVar(const Name: string; out Value: Double): Boolean;
+    procedure DelVar(const Name: string); // for scoped solving/limits
     { True while inside the op budget; increments the counter. }
     function CheckOps: Boolean;
   end;
@@ -127,6 +128,18 @@ function TEvalContext.CheckOps: Boolean;
 begin
   Inc(OpCount);
   Result := (OpCount <= PMSMaxOps) and not Cancelled;
+end;
+
+procedure TEvalContext.DelVar(const Name: string);
+var
+  I, J: Integer;
+begin
+  I := Find(Name);
+  if I < 0 then
+    Exit;
+  for J := I to High(FVars) - 1 do
+    FVars[J] := FVars[J + 1];
+  SetLength(FVars, Length(FVars) - 1);
 end;
 
 end.

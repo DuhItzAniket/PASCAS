@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 17 — Arbitrary Integer / Precision Abstraction
+Last updated: Phase 25 — Limits and Advanced Calculus
 
 ## Phase Tracking
 
@@ -23,6 +23,14 @@ Last updated: Phase 17 — Arbitrary Integer / Precision Abstraction
 | 15 | Complex Number Engine | COMPLETE | feat(phases-15-17) | 25/25 | OK | PENDING |
 | 16 | Rational Arithmetic | COMPLETE | feat(phases-15-17) | 19/19 | OK | PENDING |
 | 17 | Arbitrary Integer / Precision Abstraction | COMPLETE | feat(phases-15-17) | 17/17 | OK | PENDING |
+| 18 | Simplification Engine | COMPLETE | feat(phases-18-25) | (in test_cas) | OK | PENDING |
+| 19 | Polynomial Engine | COMPLETE | feat(phases-18-25) | 10/10 | OK | PENDING |
+| 20 | Symbolic Differentiation | COMPLETE | feat(phases-18-25) | (in test_cas) | OK | PENDING |
+| 21 | Numerical Differentiation | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
+| 22 | Numerical Integration | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
+| 23 | Symbolic Integration Foundation | COMPLETE | feat(phases-18-25) | (in test_cas) | OK | PENDING |
+| 24 | Equation Solver | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
+| 25 | Limits and Advanced Calculus | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |
