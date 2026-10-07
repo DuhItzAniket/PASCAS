@@ -50,11 +50,13 @@ type
       out V: Double; out Err: TCalcError): Boolean;
     function EvalExpr(const Text: string; out V: Double; out Err: TCalcError;
       out ErrPos: Integer): Boolean;
+    function EnsureRefs(Node: TASTNode; out Err: TCalcError): Boolean;
     function ExpandCalls(Node: TASTNode; Depth: Integer;
       out Err: TCalcError): TASTNode;
     function EntryCount: Integer;
     function EntryName(I: Integer): string;
     function EntryText(I: Integer): string;
+    function EntryKind(I: Integer): TDepKind;
     property Ctx: TEvalContext read FCtx;
   end;
 
@@ -521,6 +523,24 @@ begin
   end;
 end;
 
+function TDepStore.EnsureRefs(Node: TASTNode; out Err: TCalcError): Boolean;
+var
+  I: Integer;
+  V: Double;
+begin
+  Result := False;
+  Err := ceNone;
+  for I := 0 to High(FEntries) do
+  begin
+    if (FEntries[I].Kind = dkVar) and RefsName(Node, FEntries[I].Name) then
+    begin
+      if not EvalVarIdx(I, V, Err) then
+        Exit;
+    end;
+  end;
+  Result := True;
+end;
+
 function TDepStore.EvalExpr(const Text: string; out V: Double;
   out Err: TCalcError; out ErrPos: Integer): Boolean;
 var
@@ -578,6 +598,11 @@ end;
 function TDepStore.EntryName(I: Integer): string;
 begin
   Result := FEntries[I].Name;
+end;
+
+function TDepStore.EntryKind(I: Integer): TDepKind;
+begin
+  Result := FEntries[I].Kind;
 end;
 
 function TDepStore.EntryText(I: Integer): string;

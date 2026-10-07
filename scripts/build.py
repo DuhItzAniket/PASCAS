@@ -56,5 +56,6 @@ if __name__ == "__main__":
         print("lazbuild not found — skipping LCL desktop app (console built OK)")
     else:
         print("Using lazbuild:", laz)
-        subprocess.run([laz, os.path.join(ROOT, "app/desktop/pmstudio.lpi")], check=True)
+        # -B: lazbuild does not reliably notice .lfm edits; always rebuild
+        subprocess.run([laz, "-B", os.path.join(ROOT, "app/desktop/pmstudio.lpi")], check=True)
     print("Build OK")

@@ -31,6 +31,13 @@ object StudioForm: TStudioForm
       Width = 60
       OnClick = AngleToggle
     end
+    object GraphButton: TButton
+      Align = alRight
+      Caption = 'Graph'
+      TabStop = False
+      Width = 60
+      OnClick = GraphClicked
+    end
   end
   object HistoryBox: TListBox
     Align = alClient

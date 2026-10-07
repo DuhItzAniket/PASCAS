@@ -1,0 +1,136 @@
+object GraphForm: TGraphForm
+  Left = 200
+  Height = 560
+  Top = 100
+  Width = 860
+  Caption = 'Graph'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  object TopPanel: TPanel
+    Align = alTop
+    Height = 32
+    TabOrder = 0
+    object ExprEdit: TEdit
+      Align = alClient
+      TabOrder = 0
+      Text = 'sin(x)'
+      OnKeyDown = ExprKeyDown
+    end
+    object KindCombo: TComboBox
+      Align = alRight
+      Width = 110
+      ItemIndex = 0
+      TabOrder = 1
+      Text = 'y = f(x)'
+      Items.Strings = (
+        'y = f(x)'
+        'parametric'
+        'polar'
+        'implicit'
+      )
+    end
+    object AddButton: TButton
+      Align = alRight
+      Caption = 'Add'
+      TabOrder = 2
+      OnClick = AddClicked
+    end
+    object DelButton: TButton
+      Align = alRight
+      Caption = 'Del'
+      TabOrder = 3
+      OnClick = DelClicked
+    end
+    object Btn3D: TButton
+      Align = alRight
+      Caption = '3D...'
+      TabOrder = 4
+      OnClick = Open3D
+    end
+  end
+  object RightPanel: TPanel
+    Align = alRight
+    Width = 250
+    TabOrder = 1
+    object ExprList: TCheckListBox
+      Align = alTop
+      Height = 130
+      TabOrder = 0
+      OnClickCheck = ExprChecked
+    end
+    object DetectButton: TButton
+      Align = alTop
+      Caption = 'Detect sliders'
+      TabOrder = 1
+      OnClick = DetectSliders
+    end
+    object SliderBox: TScrollBox
+      Align = alClient
+      TabOrder = 2
+    end
+    object AnalysisPanel: TPanel
+      Align = alBottom
+      Height = 220
+      TabOrder = 3
+      object BtnRow1: TPanel
+        Align = alTop
+        Height = 28
+        TabOrder = 0
+        object RootsButton: TButton
+          Align = alLeft
+          Caption = 'Roots'
+          Width = 80
+          OnClick = RootsClicked
+        end
+        object ExtremaButton: TButton
+          Align = alLeft
+          Caption = 'Extrema'
+          Width = 80
+          OnClick = ExtremaClicked
+        end
+        object InterButton: TButton
+          Align = alLeft
+          Caption = 'Intersect'
+          Width = 80
+          OnClick = InterClicked
+        end
+      end
+      object BtnRow2: TPanel
+        Align = alTop
+        Height = 28
+        TabOrder = 1
+        object AreaButton: TButton
+          Align = alLeft
+          Caption = 'Area'
+          Width = 80
+          OnClick = AreaClicked
+        end
+        object TangentButton: TButton
+          Align = alLeft
+          Caption = 'Tangent'
+          Width = 80
+          OnClick = TangentClicked
+        end
+      end
+      object Memo: TMemo
+        Align = alClient
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 2
+      end
+    end
+  end
+  object StatusLabel: TLabel
+    Align = alBottom
+    Height = 20
+    Caption = 'drag pan | wheel zoom | click inspect'
+  end
+  object PaintBox: TPaintBox
+    Align = alClient
+    OnMouseDown = PaintMouseDown
+    OnMouseMove = PaintMouseMove
+    OnMouseUp = PaintMouseUp
+    OnMouseWheel = PaintMouseWheel
+    OnPaint = PaintBoxPaint
+  end
+end

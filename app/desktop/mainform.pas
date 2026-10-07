@@ -19,12 +19,14 @@ type
     BtnPanel: TPanel;
     TopPanel: TPanel;
     AngleButton: TButton;
+    GraphButton: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ExprKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure HistoryRecall(Sender: TObject);
     procedure AngleToggle(Sender: TObject);
+    procedure GraphClicked(Sender: TObject);
   private
     FCtx: TEvalContext;
     FMem: Double;       // memory register (volatile, per session)
@@ -47,6 +49,9 @@ var
   StudioForm: TStudioForm;
 
 implementation
+
+uses
+  GraphUI;
 
 {$R *.lfm}
 
@@ -322,6 +327,11 @@ begin
     FCtx.AngleMode := amRadian;
     AngleButton.Caption := 'RAD';
   end;
+end;
+
+procedure TStudioForm.GraphClicked(Sender: TObject);
+begin
+  GraphForm.Show;
 end;
 
 end.

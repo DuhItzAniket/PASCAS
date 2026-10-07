@@ -31,6 +31,7 @@ var
   I: Integer;
   Line: string;
 begin
+  DefaultFormatSettings.DecimalSeparator := '.'; // expression syntax is locale-independent
   Ctx := TEvalContext.Create;
   try
     if ParamCount > 0 then

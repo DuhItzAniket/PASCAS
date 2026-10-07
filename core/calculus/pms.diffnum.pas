@@ -39,8 +39,14 @@ function EvalAt(Node: TASTNode; const VarName: string; At: Double;
 var
   Had: Boolean;
   Old: Double;
+  SavedCount: Integer;
 begin
+  // Each point evaluation gets a fresh op budget (expression complexity
+  // stays bounded per point); total work is bounded by the caller's own
+  // point/iteration caps. Without this, long sample grids starve.
   Had := Ctx.GetVar(VarName, Old);
+  SavedCount := Ctx.OpCount;
+  Ctx.OpCount := 0;
   Ctx.SetVar(VarName, At);
   try
     Result := EvalNode(Node, Ctx, Err);
@@ -49,6 +55,7 @@ begin
       Ctx.SetVar(VarName, Old)
     else
       Ctx.DelVar(VarName);
+    Ctx.OpCount := SavedCount;
   end;
 end;
 

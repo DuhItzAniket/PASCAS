@@ -1,0 +1,62 @@
+object Graph3DForm: TGraph3DForm
+  Left = 220
+  Height = 540
+  Top = 110
+  Width = 720
+  Caption = 'Graph 3D'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  object TopPanel: TPanel
+    Align = alTop
+    Height = 32
+    TabOrder = 0
+    object ExprEdit: TEdit
+      Align = alClient
+      TabOrder = 0
+      Text = 'x^2+y^2'
+      OnKeyDown = ExprKeyDown
+    end
+    object PlotButton: TButton
+      Align = alRight
+      Caption = 'Plot'
+      TabOrder = 1
+      OnClick = PlotClicked
+    end
+  end
+  object SidePanel: TPanel
+    Align = alRight
+    Width = 150
+    TabOrder = 1
+    object AzimLabel: TLabel
+      Align = alTop
+      Caption = 'Azimuth'
+    end
+    object AzimTrack: TTrackBar
+      Align = alTop
+      Height = 30
+      Max = 360
+      Position = 300
+      OnChange = ViewChanged
+    end
+    object ElevLabel: TLabel
+      Align = alTop
+      Caption = 'Elevation'
+    end
+    object ElevTrack: TTrackBar
+      Align = alTop
+      Height = 30
+      Max = 90
+      Position = 30
+      OnChange = ViewChanged
+    end
+  end
+  object StatusLabel: TLabel
+    Align = alBottom
+    Height = 20
+    Caption = 'z = f(x,y) over [-5,5]^2'
+  end
+  object PaintBox: TPaintBox
+    Align = alClient
+    OnPaint = PaintBoxPaint
+  end
+end

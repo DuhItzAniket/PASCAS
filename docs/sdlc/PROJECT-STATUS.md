@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 31 — Dependency and Reactive Evaluation Engine
+Last updated: Phase 39 — 3D Graphing
 
 ## Phase Tracking
 
@@ -37,6 +37,14 @@ Last updated: Phase 31 — Dependency and Reactive Evaluation Engine
 | 29 | Probability Engine | COMPLETE | feat(phases-26-31) | (in test_stats) | OK | PENDING |
 | 30 | Units and Dimensional Analysis | COMPLETE | feat(phases-26-31) | (in test_units_deps) | OK | PENDING |
 | 31 | Dependency and Reactive Evaluation Engine | COMPLETE | feat(phases-26-31) | (in test_units_deps) | OK | PENDING |
+| 32 | 2D Coordinate System and Viewport | COMPLETE | feat(phases-32-39) | (in test_graph) | OK | PENDING |
+| 33 | 2D Function Plotting | COMPLETE | feat(phases-32-39) | (in test_graph) | OK | PENDING |
+| 34 | Robust Graph Rendering | COMPLETE | feat(phases-32-39) | (in test_graph) | OK | PENDING |
+| 35 | Multi-Expression Desmos-style Workspace | COMPLETE | feat(phases-32-39) | (in test_workspace) | OK | PENDING |
+| 36 | Sliders and Interactive Parameters | COMPLETE | feat(phases-32-39) | (in test_workspace) | OK | PENDING |
+| 37 | Parametric, Polar and Implicit Graphs | COMPLETE | feat(phases-32-39) | (in test_graph) | OK | PENDING |
+| 38 | Advanced Graph Analysis | COMPLETE | feat(phases-32-39) | (in test_workspace) | OK | PENDING |
+| 39 | 3D Graphing | COMPLETE | feat(phases-32-39) | (in test_workspace) | lazbuild LINKED, smoke | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |

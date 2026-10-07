@@ -46,6 +46,20 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
+      <Unit>
+        <Filename Value="graphui.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GraphForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="graph3dui.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Graph3DForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -54,7 +68,7 @@
       <Filename Value="..\..\bin\pmstudio"/>
     </Target>
     <SearchPaths>
-      <OtherUnitFiles Value="..\..\core;..\..\core\ast;..\..\core\parser;..\..\core\evaluator;..\..\core\numeric;..\..\core\complex;..\..\core\rational;..\..\core\bigint;..\..\core\algebra;..\..\core\polynomial;..\..\core\calculus;..\..\core\equations;..\..\core\matrices;..\..\core\statistics;..\..\core\units;..\..\core\constants"/>
+      <OtherUnitFiles Value="..\..\core;..\..\core\ast;..\..\core\parser;..\..\core\evaluator;..\..\core\numeric;..\..\core\complex;..\..\core\rational;..\..\core\bigint;..\..\core\algebra;..\..\core\polynomial;..\..\core\calculus;..\..\core\equations;..\..\core\matrices;..\..\core\statistics;..\..\core\units;..\..\core\constants;..\..\rendering\math;..\..\rendering\graph2d;..\..\rendering\graph3d"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
