@@ -1,0 +1,2958 @@
+# MASTER ENGINEERING PROMPT
+## Project: PascalMath Studio
+### Pascal-based Scientific Calculator + CAS + Desmos-style Graphing + Cross-platform Desktop + Web Application
+
+---
+
+## 0. YOUR ROLE
+
+You are the primary autonomous software-engineering agent responsible for designing and implementing this project.
+
+Act simultaneously as:
+
+- Senior Free Pascal / Object Pascal engineer
+- Lazarus desktop application engineer
+- Compiler/parser engineer
+- Numerical-computing engineer
+- Computer algebra system (CAS) engineer
+- Scientific visualization engineer
+- Frontend/UI engineer
+- Web application engineer
+- Software architect
+- QA/test engineer
+- DevOps / CI/CD engineer
+- Release engineer
+- Technical documentation engineer
+- Security reviewer
+- Performance engineer
+
+You are not merely generating snippets.
+
+You are responsible for building a maintainable, tested, documented software product through a disciplined SDLC.
+
+The project must be engineered as a real software product rather than a classroom calculator.
+
+---
+
+# 1. PROJECT VISION
+
+Build a professional scientific-computing environment named:
+
+**PascalMath Studio**
+
+The name must be centralized/configurable so it can be changed later without restructuring the project.
+
+The application should eventually combine the usability of:
+
+- A Casio/TI scientific calculator
+- Desmos
+- GeoGebra
+- A lightweight Mathematica-style CAS
+- A scientific/engineering calculator
+- A numerical-computing environment
+
+The final product must provide:
+
+### Desktop
+
+- Windows application
+- Linux application
+
+### Web
+
+- Browser-based application
+- Responsive UI
+- No installation required
+- PWA-capable architecture
+- Static deployment possible
+- HTTPS deployment
+- Shareable calculation/graph states
+- Fast interactive graphing
+- Offline-capable core where practical
+
+---
+
+# 2. PRIMARY ENGINEERING PRINCIPLE
+
+The mathematical engine must be **Pascal-first**.
+
+Do NOT build the core functionality by secretly relying on:
+
+- Python
+- SymPy
+- MATLAB
+- Mathematica
+- Wolfram Alpha
+- JavaScript mathematical libraries
+- remote APIs
+- an online CAS
+
+The project may optionally integrate external systems in a future experimental/integration layer, but the actual core scientific engine must be implemented in Pascal.
+
+The system must remain useful without internet access.
+
+---
+
+# 3. CORE ARCHITECTURE
+
+Use a layered architecture.
+
+The conceptual architecture must be:
+
+```text
+                         PascalMath Studio
+                                |
+                +---------------+---------------+
+                |                               |
+          Desktop Platform                 Web Platform
+                |                               |
+       Lazarus / LCL UI              HTML/CSS + Pascal
+                |                         via Pas2JS
+                +---------------+---------------+
+                                |
+                         Shared Core API
+                                |
+       +------------------------+------------------------+
+       |                        |                        |
+ Expression System         Math Engine                CAS
+       |                        |                        |
+ Lexer                     Numerical                 Simplifier
+ Parser                    Precision                 Differentiation
+ AST                       Complex                   Integration
+ Evaluation                Matrix                    Limits
+ Functions                 Statistics                Equation Solver
+ Units                     Polynomial                Factorization
+       |                        |                        |
+       +------------------------+------------------------+
+                                |
+                       Visualization Engine
+                                |
+                +---------------+---------------+
+                |                               |
+              2D                              3D
+             Graphs                           Graphs
+```
+
+The most important design principle is:
+
+**Shared mathematical core + separate platform adapters.**
+
+---
+
+# 4. DESKTOP TECHNOLOGY
+
+Baseline technology:
+
+- Free Pascal / Object Pascal
+- Lazarus
+- LCL
+- Native desktop controls where appropriate
+- BGRABitmap or equivalent Pascal-compatible rendering technology when beneficial
+- OpenGL only where necessary for advanced 3D
+
+Do not introduce Qt, Electron, .NET, Python or Java merely to simplify implementation.
+
+Prefer native Pascal solutions.
+
+The agent must inspect the installed toolchain first rather than blindly assuming versions.
+
+Current baseline may be FPC 3.2.2 + Lazarus 4.8, but verify the local environment and adapt carefully.
+
+---
+
+# 5. WEB TECHNOLOGY
+
+The website must preserve the Pascal-first principle.
+
+Use:
+
+- Pascal mathematical core
+- Pas2JS for browser-compatible Pascal code
+- HTML
+- CSS
+- Browser DOM APIs
+- Canvas/SVG/Web APIs as appropriate
+- JavaScript only as a thin interoperability layer where required by browser APIs or Pas2JS
+- Web Workers where useful
+- WebAssembly only if a technically justified Pascal-compatible route becomes stable and maintainable
+
+Do not turn the entire application into a JavaScript application with a tiny Pascal component just to satisfy the requirement.
+
+The mathematical engine remains Pascal.
+
+The web application should preferably operate as:
+
+```text
+Browser
+   |
+HTML/CSS shell
+   |
+Pascal UI/controller compiled using Pas2JS
+   |
+Shared Pascal mathematical engine
+   |
+Graph / CAS / calculator
+```
+
+If some shared Pascal component cannot compile under Pas2JS because it relies on desktop-only APIs, refactor the architecture so platform dependencies remain outside the shared core.
+
+The core must therefore remain as platform-neutral as reasonably possible.
+
+---
+
+# 6. FUNCTIONAL GOAL
+
+The final system should support:
+
+## Scientific Calculator
+
+- Addition
+- Subtraction
+- Multiplication
+- Division
+- Powers
+- Roots
+- Factorial
+- Modulo
+- Absolute value
+- Sign
+- Floor
+- Ceiling
+- Trigonometric functions
+- Inverse trigonometric functions
+- Hyperbolic functions
+- Inverse hyperbolic functions
+- Logarithms
+- Exponentials
+- Constants
+- Percentages
+- Scientific notation
+- Parentheses
+- Operator precedence
+- DEG/RAD/GRAD
+- Memory
+- Ans
+- History
+
+---
+
+# 7. EXPRESSION SYSTEM
+
+Users must eventually be able to enter natural mathematical expressions such as:
+
+```text
+2 + 3 * 4
+
+sin(pi/2)
+
+sqrt(25)
+
+x^2 + 2*x + 1
+
+2x + 5
+
+sin(x)^2 + cos(x)^2
+
+f(x) = x^2 + 2*x + 1
+
+a = 2
+
+f(x) = a*x^2
+
+integrate(x^2, x)
+
+differentiate(x^3*sin(x), x)
+```
+
+Support implicit multiplication where mathematically unambiguous:
+
+```text
+2x
+3(x+1)
+2sin(x)
+πr²
+```
+
+Do not simply preprocess strings using fragile regex substitutions.
+
+Build a proper lexer/parser.
+
+---
+
+# 8. ABSTRACT SYNTAX TREE
+
+Expressions must be represented internally as an AST.
+
+The AST should support at least:
+
+```text
+Number
+Integer
+Rational
+Variable
+Constant
+
+Unary operation
+
+Addition
+Subtraction
+Multiplication
+Division
+Power
+Modulo
+
+Function call
+
+Equation
+Inequality
+
+Assignment
+
+Function definition
+
+Vector
+Matrix
+```
+
+Design the AST so that it can be reused by:
+
+- Numeric evaluator
+- Simplifier
+- Differentiation engine
+- Integration engine
+- Equation solver
+- Graphing system
+- Pretty printer
+- LaTeX/Math rendering
+- Serialization
+- Dependency engine
+
+Do not create independent representations of expressions for every subsystem.
+
+---
+
+# 9. NUMERICAL SYSTEM
+
+Initially support:
+
+- Integer
+- Double / floating-point real
+- Complex
+
+Then implement:
+
+- BigInteger
+- Rational
+- BigFloat/arbitrary precision abstraction
+
+The numeric backend must be abstract enough that arbitrary precision can be introduced without rewriting the entire application.
+
+Avoid converting exact mathematical values into floating point unnecessarily.
+
+For example:
+
+```text
+1/3 + 1/6
+```
+
+should be capable of producing:
+
+```text
+1/2
+```
+
+rather than prematurely producing a floating-point approximation.
+
+---
+
+# 10. COMPUTER ALGEBRA SYSTEM
+
+Build the CAS incrementally.
+
+It should eventually support:
+
+### Simplification
+
+```text
+x + 0 = x
+x * 1 = x
+x * 0 = 0
+x - x = 0
+x^1 = x
+x^0 = 1
+sin(0) = 0
+cos(0) = 1
+ln(1) = 0
+```
+
+### Expansion
+
+```text
+(a+b)^2
+
+→ a² + 2ab + b²
+```
+
+### Factorization
+
+```text
+x² + 2x + 1
+
+→ (x+1)²
+```
+
+### Differentiation
+
+```text
+d/dx x² = 2x
+```
+
+```text
+d/dx sin(x) = cos(x)
+```
+
+```text
+d/dx f(x)g(x)
+```
+
+Use product, quotient and chain rules.
+
+### Integration
+
+Start with numerical integration.
+
+Then implement increasing symbolic integration capabilities.
+
+### Limits
+
+Eventually:
+
+```text
+lim(x→0) sin(x)/x = 1
+```
+
+### Equation solving
+
+Support numerical solving first.
+
+Then symbolic polynomial solving.
+
+Then increasingly general equations.
+
+---
+
+# 11. GRAPHING ENGINE
+
+Build a professional 2D plotting engine.
+
+Support:
+
+### Cartesian
+
+```text
+y = f(x)
+```
+
+### Parametric
+
+```text
+x(t)
+y(t)
+```
+
+### Polar
+
+```text
+r(theta)
+```
+
+### Implicit
+
+```text
+x² + y² = 1
+```
+
+Eventually support:
+
+### 3D
+
+```text
+z = f(x,y)
+```
+
+The graph engine must support:
+
+- Pan
+- Zoom
+- Scroll-wheel zoom
+- Axis scaling
+- Grid
+- Major/minor ticks
+- Labels
+- Mouse coordinates
+- Crosshair/cursor
+- Function visibility
+- Multiple expressions
+- Adaptive sampling
+- Discontinuity detection
+- NaN handling
+- Infinity handling
+- Rapidly varying functions
+- Root markers
+- Intersections
+- Extrema
+- Tangents
+- Derivative overlays
+
+---
+
+# 12. DESMOS-LIKE INTERACTION MODEL
+
+The graphing system should eventually behave similarly to a modern interactive graphing calculator.
+
+Example:
+
+```text
+f(x) = sin(x)
+
+g(x) = x²
+
+h(x) = a*sin(x)
+```
+
+Changing:
+
+```text
+a = 2
+```
+
+must automatically cause dependent expressions and plots to update.
+
+Build a dependency graph:
+
+```text
+a
+|
+v
+f
+|
+v
+g
+|
+v
+plot
+```
+
+Do not recompute unrelated expressions unnecessarily.
+
+---
+
+# 13. SLIDERS
+
+Variables should eventually be bindable to sliders.
+
+Example:
+
+```text
+A = 2
+B = 1
+C = 0
+
+f(x) = A*sin(B*x+C)
+```
+
+The user should be able to adjust:
+
+- A
+- B
+- C
+
+and see the graph update immediately.
+
+---
+
+# 14. MATRICES
+
+Implement:
+
+- Matrix creation
+- Matrix addition
+- Matrix subtraction
+- Matrix multiplication
+- Scalar multiplication
+- Transpose
+- Determinant
+- Inverse
+- Rank
+- Trace
+- Gaussian elimination
+- LU decomposition
+- QR decomposition
+- Eigenvalues
+- Eigenvectors
+- SVD
+
+Do not implement these as GUI-only functions.
+
+Create a reusable matrix library.
+
+---
+
+# 15. POLYNOMIAL SYSTEM
+
+Implement a reusable polynomial abstraction supporting:
+
+- Coefficients
+- Evaluation
+- Addition
+- Subtraction
+- Multiplication
+- Division
+- Derivative
+- Integral
+- Root finding
+- GCD
+- Factorization where possible
+- Polynomial interpolation
+- Regression support
+
+---
+
+# 16. NUMERICAL METHODS
+
+Implement:
+
+- Bisection
+- Newton-Raphson
+- Secant
+- Fixed-point iteration
+- Numerical differentiation
+- Trapezoidal integration
+- Simpson integration
+- Adaptive Simpson
+- Gaussian quadrature where justified
+- Root finding
+- Interpolation
+- Numerical optimization
+- Basic ODE solvers
+
+Later support:
+
+- Euler
+- Improved Euler
+- Runge-Kutta 4
+- Adaptive Runge-Kutta
+
+---
+
+# 17. STATISTICS
+
+Implement:
+
+- Mean
+- Median
+- Mode
+- Variance
+- Standard deviation
+- Quartiles
+- Percentiles
+- Covariance
+- Correlation
+- Linear regression
+- Polynomial regression
+- Residuals
+
+Probability distributions:
+
+- Normal
+- Binomial
+- Poisson
+- Uniform
+- Exponential
+- Student's t
+- Chi-square
+
+Eventually support:
+
+- Confidence intervals
+- Hypothesis tests
+- Z-test
+- t-test
+- Chi-square test
+
+---
+
+# 18. UNITS
+
+Implement dimensional analysis.
+
+Example:
+
+```text
+5 kg * 9.81 m/s^2
+```
+
+→
+
+```text
+49.05 N
+```
+
+Support:
+
+Length
+
+```text
+mm
+cm
+m
+km
+in
+ft
+yd
+mile
+```
+
+Mass
+
+```text
+mg
+g
+kg
+lb
+```
+
+Time
+
+```text
+ms
+s
+min
+h
+day
+```
+
+Temperature
+
+```text
+C
+F
+K
+```
+
+Energy
+
+```text
+J
+kJ
+cal
+kWh
+```
+
+Power
+
+```text
+W
+kW
+MW
+```
+
+Pressure
+
+```text
+Pa
+kPa
+bar
+atm
+psi
+```
+
+Electrical:
+
+```text
+V
+A
+ohm
+F
+H
+W
+```
+
+Allow unit conversion and dimensional validation.
+
+---
+
+# 19. CONSTANTS
+
+Support mathematical constants:
+
+```text
+pi
+e
+phi
+sqrt(2)
+sqrt(3)
+```
+
+and eventually scientific constants such as:
+
+```text
+c
+G
+h
+hbar
+kB
+NA
+R
+me
+mp
+qe
+```
+
+Create a centralized constant registry.
+
+Do not scatter constants throughout the source code.
+
+---
+
+# 20. UI PRINCIPLES
+
+The UI must feel like a modern scientific application.
+
+Avoid creating a crude calculator with 100 buttons.
+
+Primary areas:
+
+```text
++------------------------------------------------------+
+| File | Edit | View | Graph | CAS | Tools | Settings |
++------------------------------------------------------+
+|                                                    |
+|              WORKSPACE / GRAPH                     |
+|                                                    |
+|                                                    |
++------------------------------------------------------+
+| Expression / Calculator / CAS                      |
++------------------------------------------------------+
+```
+
+Use responsive layouts.
+
+Support:
+
+- Keyboard input
+- Mouse input
+- Touch where practical
+- Shortcuts
+- Undo/redo
+- Copy/paste
+- History
+- Expression editing
+- Command/search palette
+- Context menus
+
+---
+
+# 21. MATHEMATICAL RENDERING
+
+Expressions should not always appear as plain strings.
+
+Support visually readable mathematical formatting.
+
+For example:
+
+Plain:
+
+```text
+sqrt((x^2+1)/(x+2))
+```
+
+Displayed approximately as:
+
+```text
+       √(x² + 1)
+     ───────────
+         x + 2
+```
+
+Where practical, support:
+
+- Fractions
+- Superscripts
+- Subscripts
+- Roots
+- Matrices
+- Greek symbols
+- Function notation
+
+Create an abstraction that can later generate:
+
+- Screen rendering
+- Plain text
+- LaTeX
+- Clipboard text
+
+---
+
+# 22. SECURITY
+
+NEVER implement arbitrary expression execution with something equivalent to:
+
+```text
+eval(userInput)
+```
+
+Do not allow user mathematical expressions to execute arbitrary system code.
+
+The expression parser must be a controlled language.
+
+Validate:
+
+- Input length
+- Recursion depth
+- Number of operations
+- Memory usage
+- Matrix dimensions
+- Graph sampling limits
+- Iteration limits
+- Numerical runaway conditions
+
+Avoid denial-of-service behavior caused by pathological expressions.
+
+For web deployment, never expose unsafe JavaScript evaluation mechanisms.
+
+---
+
+# 23. OFFLINE-FIRST PRINCIPLE
+
+The basic calculator, CAS, graphing and scientific functionality must work without an internet connection whenever technically possible.
+
+Web deployment must not require a server request for every mathematical operation.
+
+A calculation such as:
+
+```text
+sin(pi/4)
+```
+
+must execute locally in the browser.
+
+A graph must render locally.
+
+---
+
+# 24. DATA STORAGE
+
+Support:
+
+- Save session
+- Load session
+- Export session
+- Import session
+
+Preferred format:
+
+```text
+JSON
+```
+
+Do not serialize internal pointers or memory addresses.
+
+Create versioned schemas.
+
+Example:
+
+```json
+{
+  "schemaVersion": 1,
+  "expressions": [],
+  "variables": [],
+  "viewport": {}
+}
+```
+
+Support migration of older session formats.
+
+---
+
+# 25. SHARING
+
+Eventually support shareable graph/calculation states.
+
+Possible mechanisms:
+
+### Level 1
+
+Export/import JSON.
+
+### Level 2
+
+Encode compressed state in URL/hash.
+
+### Level 3
+
+Public sharing service if a backend is later introduced.
+
+Do not introduce a backend just to satisfy basic sharing.
+
+---
+
+# 26. PERFORMANCE
+
+The application must remain responsive.
+
+Important rules:
+
+- Do not block the GUI thread unnecessarily.
+- Use background workers/threads for expensive operations.
+- Use cancellation tokens/flags for long computations.
+- Avoid recalculating unchanged expressions.
+- Cache ASTs.
+- Cache compiled evaluation forms where useful.
+- Cache graph samples when viewport has not changed.
+- Limit pathological graph sampling.
+- Use adaptive sampling instead of simply calculating millions of points.
+- Profile before optimizing.
+
+For browser execution, use Web Workers where appropriate.
+
+---
+
+# 27. ERROR HANDLING
+
+Never crash because of user mathematical input.
+
+Errors should be structured.
+
+Examples:
+
+```text
+SyntaxError
+UnknownFunction
+UnknownVariable
+DivisionByZero
+DomainError
+Overflow
+Underflow
+InvalidMatrixDimension
+ConvergenceFailure
+UnsupportedOperation
+RecursionLimit
+ComputationCancelled
+```
+
+The UI should present useful human-readable explanations.
+
+Example:
+
+```text
+Cannot evaluate log(-3) in the real-number mode.
+
+Use complex-number mode if you want to continue.
+```
+
+Do not silently return an incorrect result.
+
+---
+
+# 28. TESTING PHILOSOPHY
+
+Mathematical correctness is more important than visual polish.
+
+Every mathematical subsystem must have tests.
+
+Use:
+
+- Unit tests
+- Integration tests
+- Regression tests
+- Golden mathematical tests
+- Parser tests
+- Numerical tolerance tests
+- Cross-platform tests
+- Browser smoke tests
+- UI tests where practical
+
+Examples:
+
+```text
+2 + 2 = 4
+
+sin(pi/2) = 1
+
+sqrt(25) = 5
+
+1/3 + 1/6 = 1/2
+
+d/dx(x²) = 2x
+
+det([[1,2],[3,4]]) = -2
+```
+
+Never claim that a test passed unless it was actually executed.
+
+Never claim compilation succeeded unless it actually succeeded.
+
+Never invent test results.
+
+---
+
+# 29. TEST TOLERANCE
+
+Floating-point tests must use appropriate tolerances.
+
+Do not do fragile:
+
+```pascal
+AssertEqual(Expected, Actual);
+```
+
+for floating point unless exactness is mathematically guaranteed.
+
+Use:
+
+```text
+absolute tolerance
+relative tolerance
+```
+
+appropriately.
+
+Document numerical tolerances.
+
+---
+
+# 30. SOFTWARE QUALITY
+
+Use:
+
+- Strong typing
+- Clear naming
+- Small cohesive units
+- Interfaces where appropriate
+- Ownership rules
+- Explicit lifecycle management
+- Defensive error handling
+- Documentation comments
+- No unnecessary global state
+- No giant monolithic units
+- No duplicated mathematical logic
+
+Prefer reusable libraries over GUI-specific implementations.
+
+---
+
+# 31. REPOSITORY STRUCTURE
+
+Create a structure broadly similar to:
+
+```text
+PascalMathStudio/
+│
+├── app/
+│   ├── desktop/
+│   └── web/
+│
+├── core/
+│   ├── ast/
+│   ├── parser/
+│   ├── evaluator/
+│   ├── numeric/
+│   ├── complex/
+│   ├── rational/
+│   ├── bigint/
+│   ├── algebra/
+│   ├── polynomial/
+│   ├── calculus/
+│   ├── equations/
+│   ├── matrices/
+│   ├── statistics/
+│   ├── units/
+│   └── constants/
+│
+├── rendering/
+│   ├── math/
+│   ├── graph2d/
+│   └── graph3d/
+│
+├── platform/
+│   ├── desktop/
+│   └── web/
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   ├── regression/
+│   └── golden/
+│
+├── scripts/
+│
+├── assets/
+│
+├── docs/
+│   ├── architecture/
+│   ├── sdlc/
+│   ├── testing/
+│   ├── deployment/
+│   ├── user/
+│   └── adr/
+│
+├── .github/
+│   ├── workflows/
+│   ├── ISSUE_TEMPLATE/
+│   └── pull_request_template.md
+│
+├── README.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+├── CHANGELOG.md
+├── LICENSE
+└── ROADMAP.md
+```
+
+You may adjust the exact structure when implementation reality requires it, but preserve the architectural separation.
+
+---
+
+# 32. DOCUMENTATION REQUIREMENTS
+
+Documentation is part of the deliverable.
+
+Maintain:
+
+```text
+README.md
+
+ROADMAP.md
+
+CHANGELOG.md
+
+ARCHITECTURE.md
+
+CONTRIBUTING.md
+
+SECURITY.md
+
+docs/sdlc/
+
+docs/architecture/
+
+docs/adr/
+
+docs/testing/
+
+docs/deployment/
+
+docs/user/
+```
+
+Create an ADR for important architecture decisions.
+
+Examples:
+
+```text
+ADR-001 Pascal-first architecture
+ADR-002 AST representation
+ADR-003 Parser strategy
+ADR-004 Numeric abstraction
+ADR-005 Desktop framework
+ADR-006 Browser architecture
+ADR-007 Graph rendering strategy
+ADR-008 Persistence format
+ADR-009 CI/CD architecture
+ADR-010 Release strategy
+```
+
+Do not create unnecessary ADRs for trivial decisions.
+
+---
+
+# 33. EXACT 50-PHASE DEVELOPMENT PLAN
+
+You MUST organize implementation into exactly 50 phases.
+
+Do not randomly redefine the roadmap during development.
+
+A phase may be internally decomposed into subtasks, but the official project roadmap remains 50 phases.
+
+---
+
+## PHASE 01 — Project Discovery and Environment Audit
+
+Inspect:
+
+- Operating system
+- CPU architecture
+- Installed Free Pascal
+- Installed Lazarus
+- Git
+- GitHub CLI
+- Pas2JS availability
+- Build tools
+- Node.js only if required for auxiliary web tooling
+- Browser availability
+- Existing project files
+
+Do not assume a tool is installed.
+
+Produce:
+
+```text
+docs/sdlc/PHASE-01.md
+```
+
+Document environment findings.
+
+---
+
+## PHASE 02 — Repository and GitHub Initialization
+
+Create:
+
+- Git repository
+- .gitignore
+- README
+- LICENSE
+- CONTRIBUTING
+- SECURITY
+- CHANGELOG
+- ROADMAP
+
+Inspect GitHub authentication.
+
+If an authenticated GitHub CLI and repository creation capability are available, create/connect the GitHub repository.
+
+If a remote already exists, preserve it.
+
+Never overwrite a repository accidentally.
+
+---
+
+## PHASE 03 — Architecture and Technical Specification
+
+Create the initial architecture specification.
+
+Document:
+
+- System architecture
+- Module boundaries
+- Platform boundaries
+- Shared core rules
+- Pascal/Pas2JS strategy
+- Desktop strategy
+- Web strategy
+- Testing architecture
+
+Create initial ADRs.
+
+---
+
+## PHASE 04 — Build System and Project Skeleton
+
+Create the project structure.
+
+Establish reproducible local builds.
+
+Create initial desktop and core project files.
+
+Create basic web project skeleton.
+
+A completely empty project is not considered success.
+
+---
+
+## PHASE 05 — CI Foundation
+
+Create GitHub Actions foundation.
+
+At minimum eventually provide jobs for:
+
+```text
+build-core
+test-core
+build-desktop
+build-web
+lint/quality checks
+```
+
+At this phase the pipeline may be minimal but must execute automatically.
+
+---
+
+## PHASE 06 — Core Domain Model
+
+Implement core data types and interfaces.
+
+Create:
+
+- expression abstractions
+- result types
+- error types
+- evaluation context
+- variable context
+
+Do not implement the GUI yet.
+
+---
+
+## PHASE 07 — Lexer
+
+Implement lexical analysis.
+
+Recognize:
+
+- numbers
+- decimals
+- scientific notation
+- identifiers
+- operators
+- parentheses
+- commas
+- equals
+- symbols
+
+Write extensive lexer tests.
+
+---
+
+## PHASE 08 — Parser and AST
+
+Implement parser using a maintainable parsing strategy.
+
+Build AST nodes.
+
+Support operator precedence.
+
+Test malformed expressions extensively.
+
+---
+
+## PHASE 09 — AST Utilities and Serialization
+
+Implement:
+
+- cloning
+- equality/comparison where useful
+- traversal
+- visitor abstractions where useful
+- serialization
+- pretty printing
+
+---
+
+## PHASE 10 — Numeric Evaluator
+
+Implement numeric evaluation of AST.
+
+Support:
+
+```text
++
+-
+*
+/
+^
+()
+```
+
+Create evaluation contexts.
+
+---
+
+## PHASE 11 — Scientific Functions
+
+Implement:
+
+- sin
+- cos
+- tan
+- asin
+- acos
+- atan
+- sinh
+- cosh
+- tanh
+- ln
+- log
+- exp
+- sqrt
+- cbrt
+- abs
+- floor
+- ceil
+- round
+
+Add domain/error checking.
+
+---
+
+## PHASE 12 — Constants and Calculator Modes
+
+Implement:
+
+- pi
+- e
+- scientific constants
+- DEG
+- RAD
+- GRAD
+- real mode
+- complex mode abstraction
+
+---
+
+## PHASE 13 — Desktop Calculator UI
+
+Create the first usable Lazarus calculator.
+
+Support:
+
+- expression input
+- result
+- buttons
+- keyboard
+- history
+- clear
+- delete
+- Ans
+
+This is the first user-facing milestone.
+
+---
+
+## PHASE 14 — Calculator UX and History
+
+Improve:
+
+- editing
+- history persistence
+- copy/paste
+- keyboard shortcuts
+- memory
+- result reuse
+- error messages
+
+---
+
+## PHASE 15 — Complex Number Engine
+
+Implement robust complex arithmetic.
+
+Support:
+
+- addition
+- subtraction
+- multiplication
+- division
+- magnitude
+- argument
+- complex powers
+- complex log
+- complex trigonometry where appropriate
+
+---
+
+## PHASE 16 — Rational Arithmetic
+
+Implement exact rational numbers.
+
+Support:
+
+```text
+1/2
+1/3 + 1/6
+2/7 * 7/4
+```
+
+with canonical reduction.
+
+---
+
+## PHASE 17 — Arbitrary Integer / Precision Abstraction
+
+Create:
+
+- BigInteger abstraction
+- precision-aware numeric abstraction
+
+Use external arbitrary-precision libraries only where justified and well integrated.
+
+Do not couple the entire engine directly to one implementation.
+
+---
+
+## PHASE 18 — Simplification Engine
+
+Implement algebraic simplification.
+
+Create rule-based transformations.
+
+Avoid dangerous simplifications that are not mathematically valid for all domains.
+
+Document domain assumptions.
+
+---
+
+## PHASE 19 — Polynomial Engine
+
+Implement polynomial representation and operations.
+
+---
+
+## PHASE 20 — Symbolic Differentiation
+
+Implement symbolic differentiation for:
+
+- constants
+- variables
+- powers
+- sums
+- products
+- quotients
+- elementary functions
+
+Add golden tests.
+
+---
+
+## PHASE 21 — Numerical Differentiation
+
+Implement:
+
+- forward difference
+- backward difference
+- central difference
+
+Document numerical limitations.
+
+---
+
+## PHASE 22 — Numerical Integration
+
+Implement:
+
+- trapezoidal
+- Simpson
+- adaptive Simpson
+- error estimation
+
+---
+
+## PHASE 23 — Symbolic Integration Foundation
+
+Implement integration rules where confidently supported.
+
+Do not pretend to solve arbitrary integrals.
+
+Unsupported integrals must return a structured explanation.
+
+---
+
+## PHASE 24 — Equation Solver
+
+Implement:
+
+- bisection
+- Newton
+- secant
+
+Then polynomial roots.
+
+Provide convergence information.
+
+---
+
+## PHASE 25 — Limits and Advanced Calculus
+
+Implement a foundational limit engine.
+
+Support common simplifications and numerical fallback where appropriate.
+
+---
+
+## PHASE 26 — Matrix and Vector Engine
+
+Implement:
+
+- matrices
+- vectors
+- operations
+- determinant
+- inverse
+- rank
+- trace
+- Gaussian elimination
+
+---
+
+## PHASE 27 — Advanced Linear Algebra
+
+Implement:
+
+- LU
+- QR
+- eigenvalues
+- eigenvectors
+- SVD
+
+Add numerical stability tests.
+
+---
+
+## PHASE 28 — Statistics Engine
+
+Implement descriptive statistics and regression.
+
+---
+
+## PHASE 29 — Probability Engine
+
+Implement probability distributions.
+
+---
+
+## PHASE 30 — Units and Dimensional Analysis
+
+Implement unit registry and dimensional algebra.
+
+---
+
+## PHASE 31 — Dependency and Reactive Evaluation Engine
+
+Implement variables and functions.
+
+Example:
+
+```text
+a = 2
+b = 3
+f(x) = a*x+b
+```
+
+Build dependency tracking.
+
+---
+
+## PHASE 32 — 2D Coordinate System and Viewport
+
+Implement:
+
+- coordinate transforms
+- viewport
+- panning
+- zooming
+- grid
+- axes
+- tick generation
+
+---
+
+## PHASE 33 — 2D Function Plotting
+
+Implement:
+
+```text
+y = f(x)
+```
+
+with adaptive point sampling.
+
+---
+
+## PHASE 34 — Robust Graph Rendering
+
+Handle:
+
+- discontinuities
+- NaN
+- Infinity
+- asymptotes
+- rapidly varying functions
+- oscillations
+
+---
+
+## PHASE 35 — Multi-Expression Desmos-style Workspace
+
+Create expression list.
+
+Support:
+
+```text
+f(x)=...
+g(x)=...
+h(x)=...
+```
+
+Each expression should be independently editable and visible/hidden.
+
+---
+
+## PHASE 36 — Sliders and Interactive Parameters
+
+Add variable sliders.
+
+Changes must propagate through the dependency graph.
+
+---
+
+## PHASE 37 — Parametric, Polar and Implicit Graphs
+
+Support:
+
+```text
+x(t), y(t)
+
+r(theta)
+
+F(x,y)=0
+```
+
+---
+
+## PHASE 38 — Advanced Graph Analysis
+
+Add:
+
+- roots
+- intersections
+- extrema
+- derivative visualization
+- tangent
+- area display
+- coordinate inspection
+
+---
+
+## PHASE 39 — 3D Graphing
+
+Implement the architecture first.
+
+Then support:
+
+```text
+z = f(x,y)
+```
+
+Use GPU acceleration only if justified.
+
+---
+
+## PHASE 40 — Session Management and Sharing
+
+Implement:
+
+- save
+- load
+- import
+- export
+- JSON
+- URL/hash-based share state
+
+Version the session schema.
+
+---
+
+## PHASE 41 — Professional UI/UX
+
+Refine:
+
+- layout
+- typography
+- navigation
+- keyboard shortcuts
+- command palette
+- dark/light themes
+- responsive behavior
+- accessibility
+- mathematical editing UX
+
+---
+
+## PHASE 42 — Web Port Using Pascal + Pas2JS
+
+Port the shared core to browser-compatible Pascal.
+
+Compile using Pas2JS.
+
+Create the browser application.
+
+Do not rewrite the mathematical engine in JavaScript.
+
+Resolve any platform incompatibilities architecturally.
+
+---
+
+## PHASE 43 — Web Desmos-style Experience
+
+Implement:
+
+- responsive graph area
+- expression editor
+- browser keyboard interaction
+- touch/pointer behavior
+- Web Workers where useful
+- local storage
+- session persistence
+- fast redraw
+
+---
+
+## PHASE 44 — PWA / Offline Web Support
+
+Implement:
+
+- service worker
+- cache strategy
+- installable PWA metadata
+- offline shell
+- offline mathematical computation
+
+Ensure updates invalidate stale assets safely.
+
+---
+
+## PHASE 45 — Comprehensive Testing and Quality Gate
+
+Create comprehensive testing:
+
+```text
+unit
+integration
+regression
+golden
+desktop
+browser
+performance
+numerical stability
+```
+
+Run full test suite.
+
+Fix failures.
+
+Do not proceed with known severe failures.
+
+---
+
+## PHASE 46 — Security, Dependency and Code Review
+
+Perform:
+
+- dependency review
+- license review
+- input validation review
+- parser security review
+- memory safety review
+- web security review
+- secrets scan
+- static analysis
+- dead-code review
+
+Update:
+
+```text
+SECURITY.md
+```
+
+---
+
+## PHASE 47 — Desktop Packaging
+
+Create reproducible builds for:
+
+### Windows
+
+At minimum:
+
+```text
+Windows x64
+```
+
+Package using an appropriate installer/archive strategy.
+
+### Linux
+
+At minimum:
+
+```text
+Linux x64
+```
+
+Provide a portable distribution such as AppImage where practical and package formats where justified.
+
+---
+
+## PHASE 48 — Production CI/CD and Release Automation
+
+Create GitHub Actions workflows.
+
+Required concepts:
+
+```text
+Pull Request
+    ↓
+Tests
+    ↓
+Static checks
+    ↓
+Build
+    ↓
+Package
+    ↓
+Release
+```
+
+Automate desktop artifacts.
+
+Use semantic versioning.
+
+Generate changelog/release notes.
+
+Create GitHub releases on version tags.
+
+---
+
+## PHASE 49 — Production Web Deployment
+
+Create production deployment for the website.
+
+Preferred initial architecture:
+
+```text
+GitHub
+   |
+GitHub Actions
+   |
+Build Pascal/Pas2JS web application
+   |
+Static assets
+   |
+Production hosting
+```
+
+Suitable static hosting may include:
+
+- GitHub Pages
+- Cloudflare Pages
+- Netlify
+- Vercel
+- another equivalent static host
+
+Choose based on reproducibility, simplicity and project requirements.
+
+The site must support:
+
+```text
+HTTPS
+Responsive UI
+PWA
+Caching
+Versioned deployment
+```
+
+Do not introduce an unnecessary backend.
+
+---
+
+## PHASE 50 — Final Release / SDLC Closure
+
+Perform a full release audit.
+
+Verify:
+
+- Windows build
+- Linux build
+- Web build
+- PWA
+- Unit tests
+- Integration tests
+- Graphing
+- CAS
+- Calculator
+- Matrices
+- Statistics
+- Units
+- Session storage
+- Sharing
+- Documentation
+- CI
+- CD
+- Security
+- Performance
+
+Update:
+
+```text
+README.md
+ROADMAP.md
+CHANGELOG.md
+
+docs/sdlc/
+docs/architecture/
+docs/testing/
+docs/deployment/
+docs/user/
+```
+
+Create:
+
+```text
+docs/RELEASE-CHECKLIST.md
+docs/PROJECT-COMPLETION.md
+```
+
+Create final release tag.
+
+---
+
+# 34. MANDATORY PHASE WORKFLOW
+
+This rule is extremely important.
+
+You MUST work phase-by-phase.
+
+For every phase:
+
+```text
+1. Read project state
+2. Read ROADMAP.md
+3. Read previous phase documentation
+4. Inspect repository
+5. Inspect existing implementation
+6. Determine exact phase objectives
+7. Plan implementation
+8. Implement
+9. Write/update tests
+10. Run tests
+11. Run build
+12. Inspect failures
+13. Fix failures
+14. Review code
+15. Update documentation
+16. Update changelog/status
+17. Update phase tracking
+18. Git commit
+19. Git push
+20. Record completion
+```
+
+Only after the phase has passed its acceptance criteria may you mark it complete.
+
+---
+
+# 35. NEVER SKIP VERIFICATION
+
+Do NOT say:
+
+```text
+"this should work"
+```
+
+when you can test it.
+
+Do NOT say:
+
+```text
+"tests should pass"
+```
+
+when tests can actually be executed.
+
+Do not mark a phase completed merely because code was written.
+
+A phase is complete only when:
+
+```text
+Implementation complete
++
+Tests written
++
+Tests executed
++
+Build successful
++
+Documentation updated
++
+Git commit created
++
+GitHub push successful
+```
+
+If one of these fails, the phase is NOT complete.
+
+---
+
+# 36. GITHUB WORKFLOW
+
+After every completed phase:
+
+Run approximately:
+
+```bash
+git status
+git diff
+git add .
+git commit -m "feat(phase-XX): <phase description>"
+git push
+```
+
+Use appropriate commit prefixes:
+
+```text
+feat
+fix
+refactor
+test
+docs
+build
+ci
+perf
+security
+```
+
+Example:
+
+```text
+feat(phase-10): implement numeric evaluator
+```
+
+The commit must contain only changes relevant to that phase wherever practical.
+
+Do not create meaningless commits such as:
+
+```text
+update
+changes
+done
+final
+stuff
+```
+
+---
+
+# 37. GITHUB FAILURE HANDLING
+
+Before the first implementation phase:
+
+Check:
+
+```bash
+git remote -v
+gh auth status
+```
+
+If a GitHub remote exists and authentication works, push normally.
+
+If GitHub CLI exists and authentication permits repository creation, create the repository if necessary.
+
+Never invent GitHub credentials.
+
+Never place tokens/passwords in:
+
+- source code
+- config files
+- logs
+- commits
+- documentation
+
+If GitHub authentication is unavailable:
+
+- Continue local development where possible.
+- Commit locally.
+- Clearly document the GitHub push blocker.
+- Do not falsely claim a push occurred.
+- Do not mark the phase as fully released until the push is actually verified.
+
+Once GitHub becomes available, synchronize the pending commits safely.
+
+---
+
+# 38. PHASE DOCUMENTATION FORMAT
+
+For every phase create/update:
+
+```text
+docs/sdlc/PHASE-XX.md
+```
+
+Use:
+
+```markdown
+# Phase XX — <Name>
+
+## Objective
+
+## Scope
+
+## Requirements
+
+## Architecture Changes
+
+## Files Added
+
+## Files Modified
+
+## Implementation Details
+
+## Tests Added
+
+## Tests Executed
+
+## Build Verification
+
+## Known Limitations
+
+## Risks
+
+## Acceptance Criteria
+
+## Result
+
+## Git Commit
+
+## GitHub Push
+
+## Next Phase
+```
+
+Do not claim a test ran unless the output actually exists.
+
+Include meaningful command/output summaries.
+
+---
+
+# 39. MASTER PROJECT STATUS
+
+Maintain:
+
+```text
+docs/sdlc/PROJECT-STATUS.md
+```
+
+Include a table:
+
+| Phase | Status | Commit | Tests | Build | GitHub |
+|---|---|---|---|---|---|
+| 01 | COMPLETE | ... | PASS | PASS | PUSHED |
+| 02 | IN PROGRESS | ... | ... | ... | ... |
+| ... | ... | ... | ... | ... | ... |
+
+Statuses may be:
+
+```text
+NOT_STARTED
+IN_PROGRESS
+BLOCKED
+COMPLETE
+```
+
+Never mark COMPLETE without verification.
+
+---
+
+# 40. AGENT MEMORY / RESUMABILITY
+
+Do not rely on chat history alone.
+
+At the beginning of every new Amazon Q session:
+
+1. Read `docs/sdlc/PROJECT-STATUS.md`
+2. Read `ROADMAP.md`
+3. Inspect Git state
+4. Inspect current branch
+5. Inspect recent commits
+6. Determine the first incomplete phase
+7. Continue from there
+
+The repository itself is the source of project state.
+
+Do not assume previous chat context exists.
+
+---
+
+# 41. IMPORTANT ANTI-HALLUCINATION RULES
+
+Never fabricate:
+
+- APIs
+- libraries
+- functions
+- compiler flags
+- package names
+- test results
+- build results
+- GitHub pushes
+- deployment URLs
+- benchmarks
+- mathematical capabilities
+
+When uncertain:
+
+1. Inspect the installed environment.
+2. Inspect package/library documentation.
+3. Search official documentation when necessary.
+4. Test the behavior.
+5. Only then implement.
+
+Prefer official project documentation and source code over random blog posts.
+
+---
+
+# 42. DEPENDENCY POLICY
+
+Every external dependency requires justification.
+
+Before adding a dependency, evaluate:
+
+```text
+Purpose
+Maintenance status
+Platform support
+Pascal/FPC compatibility
+Pas2JS compatibility if shared code is involved
+License
+Binary size
+Performance
+Security
+Long-term maintenance
+```
+
+Avoid dependency accumulation.
+
+If something is easy and reliable to implement internally, prefer a native Pascal implementation.
+
+Do not reinvent highly complex cryptographic or arbitrary precision systems merely for ideology; use established libraries where appropriate.
+
+---
+
+# 43. CROSS-PLATFORM RULE
+
+The core must not contain platform-specific assumptions.
+
+Do not hard-code:
+
+```text
+C:\
+Windows-only APIs
+Linux-only APIs
+Windows path separators
+Linux path assumptions
+```
+
+Use portable path and filesystem abstractions.
+
+Platform-specific code belongs in:
+
+```text
+platform/
+```
+
+or equivalent adapter modules.
+
+---
+
+# 44. WEB COMPATIBILITY RULE
+
+Anything inside the shared core that is intended for web compilation must be compatible with the selected Pas2JS toolchain.
+
+When incompatibility occurs:
+
+Do not immediately duplicate the entire subsystem.
+
+First ask:
+
+```text
+Can the dependency be abstracted?
+Can the desktop implementation be moved behind an interface?
+Can a platform-neutral implementation be created?
+Can a browser adapter be written?
+```
+
+Preserve code reuse.
+
+---
+
+# 45. MATHEMATICAL CORRECTNESS RULE
+
+Never implement an algebraic simplification without considering domain restrictions.
+
+For example, transformations involving:
+
+```text
+sqrt
+log
+division
+complex values
+powers
+absolute values
+```
+
+can require conditions.
+
+The CAS must not blindly apply transformations that change mathematical meaning.
+
+Where domain assumptions are required, represent them explicitly or document the supported assumptions.
+
+---
+
+# 46. GRAPHING CORRECTNESS RULE
+
+Never blindly connect every sampled point.
+
+Handle:
+
+```text
+NaN
+Infinity
+large jumps
+discontinuities
+domain errors
+```
+
+Example:
+
+```text
+tan(x)
+```
+
+must not display an artificial diagonal line across the asymptote.
+
+Adaptive sampling should be introduced progressively.
+
+---
+
+# 47. UI CORRECTNESS RULE
+
+Never make the UI responsible for mathematical calculations that belong to the core.
+
+Bad:
+
+```text
+ButtonOnClick()
+    calculate derivative manually
+```
+
+Good:
+
+```text
+ButtonOnClick()
+    CoreEngine.Differentiate(...)
+```
+
+The UI is a client of the mathematical engine.
+
+---
+
+# 48. CI/CD QUALITY GATES
+
+The main branch should eventually require:
+
+```text
+Compilation
+Unit tests
+Integration tests
+Static analysis / quality checks
+Web build
+Desktop build
+```
+
+No known failing core tests should be merged.
+
+Where GitHub branch protection is possible, configure appropriate protections.
+
+---
+
+# 49. RELEASE STRATEGY
+
+Use Semantic Versioning:
+
+```text
+MAJOR.MINOR.PATCH
+```
+
+Example:
+
+```text
+0.1.0
+0.2.0
+1.0.0
+```
+
+Possible milestone strategy:
+
+```text
+v0.1.0
+Scientific Calculator
+
+v0.2.0
+Expression Engine
+
+v0.3.0
+CAS Foundation
+
+v0.4.0
+Graphing
+
+v0.5.0
+Desmos-style Workspace
+
+v0.6.0
+Linear Algebra / Statistics / Units
+
+v0.7.0
+Web Application
+
+v0.8.0
+3D and Advanced Features
+
+v0.9.0
+Production Hardening
+
+v1.0.0
+Stable Release
+```
+
+Only create releases after actual validation.
+
+---
+
+# 50. DEVELOPMENT BEHAVIOR RULES
+
+These rules override convenience.
+
+## Rule A — Do not rush
+
+Do not attempt all 50 phases in one enormous implementation session.
+
+Implement one official phase at a time.
+
+---
+
+## Rule B — Do not stop because the task is large
+
+Break work internally into manageable subtasks.
+
+Do not respond:
+
+```text
+"This is too complex."
+```
+
+Instead continue with the current phase.
+
+---
+
+## Rule C — Do not hallucinate
+
+Test everything that can be tested.
+
+---
+
+## Rule D — Do not silently change architecture
+
+If an architectural decision must change:
+
+1. Explain why in the phase document.
+2. Update the relevant ADR.
+3. Update architecture documentation.
+4. Continue with the revised design.
+
+---
+
+## Rule E — Preserve working functionality
+
+Before changing a subsystem:
+
+- inspect tests
+- inspect dependencies
+- inspect public interfaces
+- understand callers
+
+Avoid breaking completed phases unnecessarily.
+
+---
+
+## Rule F — Regression testing is mandatory
+
+When modifying a completed module, run its existing regression tests.
+
+---
+
+## Rule G — Do not delete working functionality to make compilation easier
+
+Refactor properly.
+
+---
+
+## Rule H — Keep the codebase understandable
+
+Future developers must be able to understand the code without reading the entire repository.
+
+---
+
+## Rule I — Prefer correctness over feature count
+
+A smaller mathematically correct CAS is better than a huge collection of unreliable commands.
+
+---
+
+## Rule J — Keep the product deployable throughout development
+
+At meaningful milestones there must always be a runnable artifact.
+
+---
+
+# 51. INITIAL EXECUTION INSTRUCTION
+
+You are currently inside the project's selected VS Code workspace folder.
+
+Do NOT immediately start implementing arbitrary features.
+
+First:
+
+### Step 1
+
+Inspect the complete current workspace.
+
+### Step 2
+
+Determine whether the directory is empty or contains an existing project.
+
+### Step 3
+
+Inspect:
+
+```text
+OS
+FPC
+Lazarus
+Git
+GitHub CLI
+Pas2JS
+available build tools
+```
+
+### Step 4
+
+Inspect Git state:
+
+```bash
+git status
+git remote -v
+git branch
+git log
+```
+
+Do not destroy existing files.
+
+Do not overwrite existing Git configuration without understanding it.
+
+### Step 5
+
+Create the architecture and SDLC documentation.
+
+### Step 6
+
+Create the 50-phase roadmap.
+
+### Step 7
+
+Create the repository/project skeleton.
+
+### Step 8
+
+Create the initial CI foundation.
+
+### Step 9
+
+Write and execute tests for anything implemented during this initial phase.
+
+### Step 10
+
+Commit and push the completed work.
+
+### Step 11
+
+Update:
+
+```text
+docs/sdlc/PROJECT-STATUS.md
+docs/sdlc/PHASE-01.md
+ROADMAP.md
+CHANGELOG.md
+```
+
+### Step 12
+
+Only after Phase 01 satisfies its acceptance criteria, proceed to Phase 02 according to the same workflow.
+
+---
+
+# 52. IMPORTANT: CONTINUOUS EXECUTION MODEL
+
+For every new interaction with me:
+
+```text
+READ STATE
+   ↓
+FIND FIRST INCOMPLETE PHASE
+   ↓
+IMPLEMENT ONLY THAT PHASE
+   ↓
+TEST
+   ↓
+BUILD
+   ↓
+DOCUMENT
+   ↓
+COMMIT
+   ↓
+PUSH
+   ↓
+UPDATE STATUS
+```
+
+Do not restart the project.
+
+Do not repeat completed phases unless regression repair is required.
+
+Do not assume that a previous conversation still exists.
+
+---
+
+# 53. FINAL PRODUCT STANDARD
+
+The finished product should feel like a genuine scientific-computing application, not a student calculator.
+
+The long-term UX target is conceptually:
+
+```text
++---------------------------------------------------------------+
+| PascalMath Studio                                             |
++---------------------------------------------------------------+
+| Expressions                         |                         |
+|                                     |                         |
+| f(x) = sin(x)                       |                         |
+| g(x) = x² + 2x + 1                  |     INTERACTIVE         |
+| h(x) = a*sin(b*x)                   |        GRAPH            |
+|                                     |                         |
+| a = 2   [=====----]                 |                         |
+| b = 1   [====-----]                 |                         |
+|                                     |                         |
++-------------------------------------+-------------------------+
+| CAS / Calculator Result                                        |
+|                                                               |
+| d/dx (x³ sin(x))                                              |
+|                                                               |
+| 3x² sin(x) + x³ cos(x)                                       |
++---------------------------------------------------------------+
+```
+
+The application should eventually be capable of moving naturally between:
+
+```text
+CALCULATE
+     ↓
+DEFINE
+     ↓
+SIMPLIFY
+     ↓
+DIFFERENTIATE
+     ↓
+INTEGRATE
+     ↓
+SOLVE
+     ↓
+PLOT
+     ↓
+ANALYZE
+```
+
+without forcing the user to leave the application.
+
+---
+
+# 54. SUCCESS CRITERIA
+
+The project is successful when:
+
+### Desktop
+
+The user can install/run the application on Windows and Linux.
+
+### Web
+
+The user can open the application in a browser without installing anything.
+
+### Calculator
+
+Scientific calculations work correctly.
+
+### Parser
+
+Natural mathematical syntax works.
+
+### CAS
+
+Symbolic computation works for the implemented supported domain.
+
+### Graphing
+
+Interactive 2D graphing works smoothly.
+
+### Advanced
+
+Matrices, statistics, units and numerical methods are available.
+
+### Engineering
+
+The project has:
+
+- automated tests
+- CI
+- CD
+- reproducible builds
+- documentation
+- versioning
+- release artifacts
+- security practices
+- maintainable architecture
+
+### Pascal Requirement
+
+The mathematical core remains implemented in Pascal.
+
+---
+
+# 55. FINAL COMMAND
+
+Start now.
+
+Do not ask me to design the architecture for you.
+
+Do not ask me to manually divide the project into phases.
+
+Do not ask me what files to create.
+
+Do not wait for me to provide implementation details that can reasonably be determined from the requirements above.
+
+Inspect the workspace and environment, make the appropriate engineering decisions, document them, and begin with **Phase 01**.
+
+When a choice has multiple valid solutions, choose the option that maximizes:
+
+```text
+Correctness
+Maintainability
+Cross-platform compatibility
+Pascal reuse
+Pas2JS compatibility
+Performance
+Testability
+Security
+Long-term extensibility
+```
+
+Do not optimize solely for getting a visually impressive demo quickly.
+
+Build the software correctly.

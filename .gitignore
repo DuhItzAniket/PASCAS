@@ -1,0 +1,39 @@
+# Free Pascal / Lazarus
+*.o
+*.ppu
+*.a
+*.or
+*.compiled
+*.bak
+*.lps
+*.res
+*.rsj
+lib/
+backup/
+
+# Lazarus project output
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Pas2JS output
+*.js.map
+node_modules/
+web/dist/
+web/build/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/settings.json
+*.swp
+*~
+
+# Build artifacts
+build/
+out/
+dist/

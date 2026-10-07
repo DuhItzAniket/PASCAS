@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Placeholder — will be expanded in Phase 05
+  # Requires FPC/Lazarus installed on runner (Phase 04+)
+
+  lint-docs:
+    name: Lint Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          test -f README.md
+          test -f LICENSE
+          test -f CONTRIBUTING.md
+          test -f SECURITY.md
+          test -f CHANGELOG.md
+          test -f ROADMAP.md
+          test -f docs/sdlc/PROJECT-STATUS.md
+          echo "All required documentation files present."
+
+  # Future jobs (activated in Phase 05):
+  # build-core:
+  # test-core:
+  # build-desktop:
+  # build-web:
