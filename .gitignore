@@ -37,3 +37,8 @@ desktop.ini
 build/
 out/
 dist/
+bin/
+
+# Python helpers (orchestration only)
+__pycache__/
+*.pyc

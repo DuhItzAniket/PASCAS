@@ -7,15 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  # Placeholder — will be expanded in Phase 05
-  # Requires FPC/Lazarus installed on runner (Phase 04+)
-
   lint-docs:
     name: Lint Documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Check required files exist
         run: |
           test -f README.md
@@ -27,8 +23,27 @@ jobs:
           test -f docs/sdlc/PROJECT-STATUS.md
           echo "All required documentation files present."
 
-  # Future jobs (activated in Phase 05):
-  # build-core:
-  # test-core:
-  # build-desktop:
-  # build-web:
+  build-core:
+    name: Build core + console front-end (FPC)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FPC
+        run: sudo apt-get update && sudo apt-get install -y fpc python3
+      - name: Build
+        run: python3 scripts/build.py
+
+  test-core:
+    name: Unit + golden tests
+    runs-on: ubuntu-latest
+    needs: build-core
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FPC
+        run: sudo apt-get update && sudo apt-get install -y fpc python3
+      - name: Run test runners
+        run: python3 scripts/runtests.py
+
+  # Activated in later phases:
+  # build-desktop: lazbuild LCL app (Phase 13)
+  # build-web: pas2js compile (Phase 42)

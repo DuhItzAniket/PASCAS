@@ -1,13 +1,19 @@
 # Project Status
 
-Last updated: Phase 02 — Repository and GitHub Initialization
+Last updated: Phase 08 — Parser and AST
 
 ## Phase Tracking
 
 | Phase | Name | Status | Commit | Tests | Build | GitHub |
 |-------|------|--------|--------|-------|-------|--------|
-| 01 | Project Discovery and Environment Audit | COMPLETE | docs(phase-01) | N/A | N/A | PUSHED |
-| 02 | Repository and GitHub Initialization | COMPLETE | docs(phase-02) | N/A | N/A | PUSHED |
+| 01 | Project Discovery and Environment Audit | COMPLETE | docs(phase-01) | N/A | N/A | PENDING |
+| 02 | Repository and GitHub Initialization | COMPLETE | docs(phase-02) | N/A | N/A | PENDING |
+| 03 | Architecture and Technical Specification | COMPLETE | feat(phases-03-08) | N/A | N/A | PENDING |
+| 04 | Build System and Project Skeleton | COMPLETE | feat(phases-03-08) | N/A | Build OK | PENDING |
+| 05 | CI Foundation | COMPLETE | feat(phases-03-08) | N/A | N/A | PENDING |
+| 06 | Core Domain Model | COMPLETE | feat(phases-03-08) | 8/8 | OK | PENDING |
+| 07 | Lexer | COMPLETE | feat(phases-03-08) | 10/10 | OK | PENDING |
+| 08 | Parser and AST | COMPLETE | feat(phases-03-08) | 20+/20+ | OK | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |
