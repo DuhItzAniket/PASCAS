@@ -66,6 +66,7 @@ type
     function ParamInfo(I: Integer): TParamBinding;
     function EntryCount: Integer;
     function EntryText(I: Integer): string;
+    function EntryRawText(I: Integer): string;
     function EntryKind(I: Integer): TWSKind;
     function EntryVisible(I: Integer): Boolean;
     function EntryColor(I: Integer): Integer;
@@ -339,6 +340,11 @@ const
   KindTag: array[TWSKind] of string = ('', ' (param)', ' (polar)', ' (implicit)');
 begin
   Result := FEntries[I].Text + KindTag[FEntries[I].Kind];
+end;
+
+function TWorkspace.EntryRawText(I: Integer): string;
+begin
+  Result := FEntries[I].Text;
 end;
 
 function TWorkspace.EntryKind(I: Integer): TWSKind;

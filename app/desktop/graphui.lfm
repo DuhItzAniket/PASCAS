@@ -4,8 +4,10 @@ object GraphForm: TGraphForm
   Top = 100
   Width = 860
   Caption = 'Graph'
+  KeyPreview = True
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   object TopPanel: TPanel
     Align = alTop
     Height = 32
@@ -64,6 +66,12 @@ object GraphForm: TGraphForm
       TabOrder = 1
       OnClick = DetectSliders
     end
+    object ThemeCheck: TCheckBox
+      Align = alTop
+      Caption = 'Dark'
+      TabOrder = 4
+      OnClick = ThemeToggled
+    end
     object SliderBox: TScrollBox
       Align = alClient
       TabOrder = 2
@@ -110,6 +118,29 @@ object GraphForm: TGraphForm
           Caption = 'Tangent'
           Width = 80
           OnClick = TangentClicked
+        end
+      end
+      object BtnRow3: TPanel
+        Align = alTop
+        Height = 28
+        TabOrder = 3
+        object SaveButton: TButton
+          Align = alLeft
+          Caption = 'Save'
+          Width = 80
+          OnClick = SaveClicked
+        end
+        object LoadButton: TButton
+          Align = alLeft
+          Caption = 'Load'
+          Width = 80
+          OnClick = LoadClicked
+        end
+        object LinkButton: TButton
+          Align = alLeft
+          Caption = 'Link'
+          Width = 80
+          OnClick = LinkClicked
         end
       end
       object Memo: TMemo

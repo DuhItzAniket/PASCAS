@@ -10,8 +10,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-  Graphics, LCLType, PMS.Types, PMS.AST, PMS.Matrix, PMS.Viewport, PMS.Sampler,
-  PMS.Workspace, PMS.Analysis, PMS.Deps;
+  Dialogs, Clipbrd, Graphics, LCLType, PMS.Types, PMS.AST, PMS.Matrix,
+  PMS.Viewport, PMS.Sampler, PMS.Workspace, PMS.Analysis, PMS.Deps, PMS.Session;
 
 type
   TGraphForm = class(TForm)
@@ -29,6 +29,10 @@ type
     InterButton: TButton;
     AreaButton: TButton;
     TangentButton: TButton;
+    SaveButton: TButton;
+    LoadButton: TButton;
+    LinkButton: TButton;
+    ThemeCheck: TCheckBox;
     StatusLabel: TLabel;
     PaintBox: TPaintBox;
     TopPanel: TPanel;
@@ -36,6 +40,12 @@ type
     AnalysisPanel: TPanel;
     BtnRow1: TPanel;
     BtnRow2: TPanel;
+    BtnRow3: TPanel;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ThemeToggled(Sender: TObject);
+    procedure SaveClicked(Sender: TObject);
+    procedure LoadClicked(Sender: TObject);
+    procedure LinkClicked(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AddClicked(Sender: TObject);
@@ -67,7 +77,10 @@ type
     FLastX, FLastY: Integer;
     FInspectX: Double;
     FHasInspect: Boolean;
+    FDark: Boolean;
+    FPaper, FGrid, FAxis: TColor;
     procedure EnsureInit;
+    procedure ApplyTheme;
     procedure RefreshList;
     procedure RebuildSliders;
     function SelectedEntry: Integer;
@@ -94,6 +107,8 @@ begin
   FInit := False;
   FDrag := False;
   FHasInspect := False;
+  FDark := False;
+  ApplyTheme;
   Caption := 'PascalMath Studio — Graph';
 end;
 
@@ -143,7 +158,29 @@ var
   P: Integer;
   K: TWSKind;
   Idx: Integer;
+  J: string;
+  A: Integer;
 begin
+  if Trim(ExprEdit.Text) <> '' then
+  begin
+    // pasted share-link imports the session directly
+    if Trim(ExprEdit.Text)[1] = '#' then
+    begin
+      if SessionFromHash(Trim(ExprEdit.Text), J, E) and
+        SessionLoad(J, FWS, FV, A, E) then
+      begin
+        FWS.Store.Ctx.AngleMode := TAngleMode(A);
+        FInit := True;
+        RefreshList;
+        RebuildSliders;
+        StatusLabel.Caption := 'Session imported from link.';
+        PaintBox.Invalidate;
+      end
+      else
+        StatusLabel.Caption := 'Link error: ' + CalcErrorMessage(E);
+      Exit;
+    end;
+  end;
   case KindCombo.ItemIndex of
     1: K := wkParam;
     2: K := wkPolar;
@@ -431,6 +468,144 @@ begin
   end;
 end;
 
+procedure TGraphForm.ThemeToggled(Sender: TObject);
+begin
+  FDark := ThemeCheck.Checked;
+  ApplyTheme;
+  PaintBox.Invalidate;
+end;
+
+procedure TGraphForm.ApplyTheme;
+begin
+  if FDark then
+  begin
+    FPaper := $1E1E1E;
+    FGrid := $3A3A3A;
+    FAxis := $CCCCCC;
+    Color := $2D2D2D;
+    RightPanel.Color := $2D2D2D;
+    TopPanel.Color := $2D2D2D;
+    AnalysisPanel.Color := $2D2D2D;
+    BtnRow1.Color := $2D2D2D;
+    BtnRow2.Color := $2D2D2D;
+    BtnRow3.Color := $2D2D2D;
+    Memo.Color := $1E1E1E;
+    Memo.Font.Color := $E0E0E0;
+    ExprEdit.Color := $1E1E1E;
+    ExprEdit.Font.Color := $E0E0E0;
+    ExprList.Color := $1E1E1E;
+    ExprList.Font.Color := $E0E0E0;
+    StatusLabel.Font.Color := $E0E0E0;
+  end
+  else
+  begin
+    FPaper := clWhite;
+    FGrid := $E0E0E0;
+    FAxis := clBlack;
+    Color := clDefault;
+    RightPanel.Color := clDefault;
+    TopPanel.Color := clDefault;
+    AnalysisPanel.Color := clDefault;
+    BtnRow1.Color := clDefault;
+    BtnRow2.Color := clDefault;
+    BtnRow3.Color := clDefault;
+    Memo.Color := clWindow;
+    Memo.Font.Color := clWindowText;
+    ExprEdit.Color := clWindow;
+    ExprEdit.Font.Color := clWindowText;
+    ExprList.Color := clWindow;
+    ExprList.Font.Color := clWindowText;
+    StatusLabel.Font.Color := clWindowText;
+  end;
+end;
+
+procedure TGraphForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) and (Key = Ord('S')) then
+  begin
+    SaveClicked(Sender);
+    Key := 0;
+  end
+  else if (ssCtrl in Shift) and (Key = Ord('O')) then
+  begin
+    LoadClicked(Sender);
+    Key := 0;
+  end;
+end;
+
+procedure TGraphForm.SaveClicked(Sender: TObject);
+var
+  D: TSaveDialog;
+  J: string;
+begin
+  if not SessionSave(FWS, FV, Ord(FWS.Store.Ctx.AngleMode), J) then
+    Exit;
+  D := TSaveDialog.Create(Self);
+  try
+    D.Filter := 'PascalMath session (*.pmsession)|*.pmsession|JSON (*.json)|*.json';
+    D.DefaultExt := 'pmsession';
+    if D.Execute then
+    begin
+      with TStringList.Create do
+      try
+        Text := J;
+        SaveToFile(D.FileName);
+        StatusLabel.Caption := 'Saved ' + D.FileName;
+      finally
+        Free;
+      end;
+    end;
+  finally
+    D.Free;
+  end;
+end;
+
+procedure TGraphForm.LoadClicked(Sender: TObject);
+var
+  D: TOpenDialog;
+  J: string;
+  E: TCalcError;
+  A: Integer;
+begin
+  D := TOpenDialog.Create(Self);
+  try
+    D.Filter := 'PascalMath session (*.pmsession)|*.pmsession|JSON (*.json)|*.json';
+    if not D.Execute then
+      Exit;
+    with TStringList.Create do
+    try
+      LoadFromFile(D.FileName);
+      J := Text;
+    finally
+      Free;
+    end;
+    if SessionLoad(J, FWS, FV, A, E) then
+    begin
+      FWS.Store.Ctx.AngleMode := TAngleMode(A);
+      FInit := True;
+      RefreshList;
+      RebuildSliders;
+      StatusLabel.Caption := 'Loaded ' + D.FileName;
+      PaintBox.Invalidate;
+    end
+    else
+      StatusLabel.Caption := 'Load error: ' + CalcErrorMessage(E);
+  finally
+    D.Free;
+  end;
+end;
+
+procedure TGraphForm.LinkClicked(Sender: TObject);
+var
+  J: string;
+begin
+  if not SessionSave(FWS, FV, Ord(FWS.Store.Ctx.AngleMode), J) then
+    Exit;
+  Clipboard.AsText := SessionToHash(J);
+  StatusLabel.Caption := 'Share link copied. Paste it into the expression box + Add to import.';
+end;
+
 procedure TGraphForm.Open3D(Sender: TObject);
 begin
   Graph3DForm.Show;
@@ -454,10 +629,10 @@ begin
   V := FV;
   with PaintBox.Canvas do
   begin
-    Brush.Color := clWhite;
+    Brush.Color := FPaper;
     FillRect(0, 0, PaintBox.Width, PaintBox.Height);
     // grid
-    Pen.Color := $E0E0E0;
+    Pen.Color := FGrid;
     Pen.Style := psDot;
     Pen.Width := 1;
     VNiceTicks(V.XMin, V.XMax, 10, TX);
@@ -475,7 +650,7 @@ begin
       LineTo(V.W, Round(SY));
     end;
     // axes
-    Pen.Color := clBlack;
+    Pen.Color := FAxis;
     Pen.Style := psSolid;
     if (V.YMin <= 0) and (V.YMax >= 0) then
     begin

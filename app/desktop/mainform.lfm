@@ -38,6 +38,13 @@ object StudioForm: TStudioForm
       Width = 60
       OnClick = GraphClicked
     end
+    object DarkCheck: TCheckBox
+      Align = alRight
+      Caption = 'Dark'
+      TabStop = False
+      Width = 56
+      OnClick = ThemeToggled
+    end
   end
   object HistoryBox: TListBox
     Align = alClient

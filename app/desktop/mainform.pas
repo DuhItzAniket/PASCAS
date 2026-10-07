@@ -8,8 +8,8 @@ unit MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, LCLType, Clipbrd,
-  PMS.Types, PMS.Eval;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Graphics, LCLType,
+  Clipbrd, PMS.Types, PMS.Eval;
 
 type
   TStudioForm = class(TForm)
@@ -20,6 +20,7 @@ type
     TopPanel: TPanel;
     AngleButton: TButton;
     GraphButton: TButton;
+    DarkCheck: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -27,6 +28,7 @@ type
     procedure HistoryRecall(Sender: TObject);
     procedure AngleToggle(Sender: TObject);
     procedure GraphClicked(Sender: TObject);
+    procedure ThemeToggled(Sender: TObject);
   private
     FCtx: TEvalContext;
     FMem: Double;       // memory register (volatile, per session)
@@ -272,6 +274,11 @@ begin
     ExprEdit.Text := '';
     ResultLabel.Caption := '0';
     Key := 0;
+  end
+  else if (ssCtrl in Shift) and (Key = Ord('G')) then
+  begin
+    GraphClicked(Sender);
+    Key := 0;
   end;
 end;
 
@@ -332,6 +339,32 @@ end;
 procedure TStudioForm.GraphClicked(Sender: TObject);
 begin
   GraphForm.Show;
+end;
+
+procedure TStudioForm.ThemeToggled(Sender: TObject);
+begin
+  if DarkCheck.Checked then
+  begin
+    Color := $2D2D2D;
+    TopPanel.Color := $2D2D2D;
+    BtnPanel.Color := $2D2D2D;
+    HistoryBox.Color := $1E1E1E;
+    HistoryBox.Font.Color := $E0E0E0;
+    ExprEdit.Color := $1E1E1E;
+    ExprEdit.Font.Color := $E0E0E0;
+    ResultLabel.Font.Color := $E0E0E0;
+  end
+  else
+  begin
+    Color := clDefault;
+    TopPanel.Color := clDefault;
+    BtnPanel.Color := clDefault;
+    HistoryBox.Color := clWindow;
+    HistoryBox.Font.Color := clWindowText;
+    ExprEdit.Color := clWindow;
+    ExprEdit.Font.Color := clWindowText;
+    ResultLabel.Font.Color := clWindowText;
+  end;
 end;
 
 end.
