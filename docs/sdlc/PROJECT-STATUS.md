@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 25 — Limits and Advanced Calculus
+Last updated: Phase 31 — Dependency and Reactive Evaluation Engine
 
 ## Phase Tracking
 
@@ -31,6 +31,12 @@ Last updated: Phase 25 — Limits and Advanced Calculus
 | 23 | Symbolic Integration Foundation | COMPLETE | feat(phases-18-25) | (in test_cas) | OK | PENDING |
 | 24 | Equation Solver | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
 | 25 | Limits and Advanced Calculus | COMPLETE | feat(phases-18-25) | (in test_calc2) | OK | PENDING |
+| 26 | Matrix and Vector Engine | COMPLETE | feat(phases-26-31) | 13/13 | OK | PENDING |
+| 27 | Advanced Linear Algebra | COMPLETE | feat(phases-26-31) | 8/8 | OK | PENDING |
+| 28 | Statistics Engine | COMPLETE | feat(phases-26-31) | (in test_stats) | OK | PENDING |
+| 29 | Probability Engine | COMPLETE | feat(phases-26-31) | (in test_stats) | OK | PENDING |
+| 30 | Units and Dimensional Analysis | COMPLETE | feat(phases-26-31) | (in test_units_deps) | OK | PENDING |
+| 31 | Dependency and Reactive Evaluation Engine | COMPLETE | feat(phases-26-31) | (in test_units_deps) | OK | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |
