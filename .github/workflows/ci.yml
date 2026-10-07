@@ -45,5 +45,14 @@ jobs:
         run: python3 scripts/runtests.py
 
   # Activated in later phases:
-  # build-desktop: lazbuild LCL app (Phase 13)
   # build-web: pas2js compile (Phase 42)
+
+  build-desktop:
+    name: Build desktop LCL app (lazbuild)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lazarus
+        run: sudo apt-get update && sudo apt-get install -y lazarus python3
+      - name: Build LCL app
+        run: lazbuild app/desktop/pmstudio.lpi

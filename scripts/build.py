@@ -7,6 +7,20 @@ FPC_CANDIDATES = [
 ]
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LAZBUILD_CANDIDATES = [
+    r"C:\lazarus\lazbuild.exe",  # dev machine bundle
+    "lazbuild",  # PATH (CI installs lazarus via apt)
+]
+
+def find_lazbuild():
+    for c in LAZBUILD_CANDIDATES:
+        try:
+            subprocess.run([c, "--version"], capture_output=True, check=True)
+            return c
+        except (OSError, subprocess.CalledProcessError):
+            continue
+    return None
+
 def find_fpc():
     for c in FPC_CANDIDATES:
         try:
@@ -37,4 +51,10 @@ if __name__ == "__main__":
     print("Using FPC:", fpc)
     compile_target(fpc, os.path.join(ROOT, "app/desktop/pmscalc.lpr"),
                    os.path.join(ROOT, "bin/pmscalc" + (".exe" if os.name == "nt" else "")))
+    laz = find_lazbuild()
+    if laz is None:
+        print("lazbuild not found — skipping LCL desktop app (console built OK)")
+    else:
+        print("Using lazbuild:", laz)
+        subprocess.run([laz, os.path.join(ROOT, "app/desktop/pmstudio.lpi")], check=True)
     print("Build OK")

@@ -1,0 +1,45 @@
+object StudioForm: TStudioForm
+  Left = 248
+  Height = 560
+  Top = 110
+  Width = 430
+  Caption = 'PascalMath Studio'
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
+  object TopPanel: TPanel
+    Align = alTop
+    Height = 88
+    TabOrder = 0
+    object ExprEdit: TEdit
+      Align = alTop
+      Height = 30
+      TabOrder = 0
+      OnKeyDown = ExprKeyDown
+    end
+    object ResultLabel: TLabel
+      Align = alClient
+      Alignment = taRightJustify
+      Caption = '0'
+      Font.Height = -20
+    end
+    object AngleButton: TButton
+      Align = alRight
+      Caption = 'RAD'
+      TabStop = False
+      Width = 60
+      OnClick = AngleToggle
+    end
+  end
+  object HistoryBox: TListBox
+    Align = alClient
+    TabOrder = 1
+    OnDblClick = HistoryRecall
+  end
+  object BtnPanel: TPanel
+    Align = alBottom
+    Height = 228
+    TabOrder = 2
+  end
+end

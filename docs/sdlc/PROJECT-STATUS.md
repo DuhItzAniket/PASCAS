@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 12 — Constants and Calculator Modes
+Last updated: Phase 14 — Calculator UX and History
 
 ## Phase Tracking
 
@@ -18,6 +18,8 @@ Last updated: Phase 12 — Constants and Calculator Modes
 | 10 | Numeric Evaluator | COMPLETE | feat(phases-09-12) | 45+/45+ | OK, live REPL | PENDING |
 | 11 | Scientific Functions | COMPLETE | feat(phases-09-12) | (in test_eval) | OK | PENDING |
 | 12 | Constants and Calculator Modes | COMPLETE | feat(phases-09-12) | (in test_eval) | OK | PENDING |
+| 13 | Desktop Calculator UI | COMPLETE | feat(phases-13-14) | smoke (launch 3s) | lazbuild LINKED | PENDING |
+| 14 | Calculator UX and History | COMPLETE | feat(phases-13-14) | smoke | lazbuild clean | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |
