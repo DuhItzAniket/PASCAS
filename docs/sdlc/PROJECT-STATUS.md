@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 08 — Parser and AST
+Last updated: Phase 12 — Constants and Calculator Modes
 
 ## Phase Tracking
 
@@ -14,6 +14,10 @@ Last updated: Phase 08 — Parser and AST
 | 06 | Core Domain Model | COMPLETE | feat(phases-03-08) | 8/8 | OK | PENDING |
 | 07 | Lexer | COMPLETE | feat(phases-03-08) | 10/10 | OK | PENDING |
 | 08 | Parser and AST | COMPLETE | feat(phases-03-08) | 20+/20+ | OK | PENDING |
+| 09 | AST Utilities and Serialization | COMPLETE | feat(phases-09-12) | 7/7 | OK | PENDING |
+| 10 | Numeric Evaluator | COMPLETE | feat(phases-09-12) | 45+/45+ | OK, live REPL | PENDING |
+| 11 | Scientific Functions | COMPLETE | feat(phases-09-12) | (in test_eval) | OK | PENDING |
+| 12 | Constants and Calculator Modes | COMPLETE | feat(phases-09-12) | (in test_eval) | OK | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |

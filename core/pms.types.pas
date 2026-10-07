@@ -17,6 +17,10 @@ const
 type
   TAngleMode = (amRadian, amDegree, amGrad);
 
+  { Real mode: domain errors for sqrt/log of negatives etc.
+    Complex mode: reserved for Phase 15 (evaluator branches there). }
+  TNumberMode = (nmReal, nmComplex);
+
   TCalcError = (ceNone, ceSyntax, ceUnknownFunction, ceUnknownVariable,
     ceDivisionByZero, ceDomain, ceOverflow, ceUnderflow, ceInvalidMatrixDim,
     ceNoConvergence, ceUnsupported, ceRecursionLimit, ceCancelled, ceTooComplex);
@@ -36,6 +40,7 @@ type
     function Find(const Name: string): Integer;
   public
     AngleMode: TAngleMode;
+    NumberMode: TNumberMode;
     Ans: Double;
     HasAns: Boolean;
     OpCount: Integer;
@@ -73,6 +78,7 @@ constructor TEvalContext.Create;
 begin
   inherited Create;
   AngleMode := amRadian;
+  NumberMode := nmReal;
   Ans := 0;
   HasAns := False;
   OpCount := 0;
