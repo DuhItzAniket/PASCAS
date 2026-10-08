@@ -85,10 +85,8 @@ begin
   Result := S * H / 3;
 end;
 
-function SimpOnce(Node: TASTNode; const VarName: string; A, B, FA, FM, FB: Double;
-  Ctx: TEvalContext; out Err: TCalcError): Double;
+function SimpPanel(A, B, FA, FM, FB: Double): Double;
 begin
-  Err := ceNone;
   Result := (B - A) / 6 * (FA + 4 * FM + FB);
 end;
 
@@ -158,9 +156,7 @@ begin
   FB := EvalAt(Node, VarName, B, Ctx, Err);
   if Err <> ceNone then
     Exit;
-  Whole := SimpOnce(Node, VarName, A, B, FA, FM, FB, Ctx, Err);
-  if Err <> ceNone then
-    Exit;
+  Whole := SimpPanel(A, B, FA, FM, FB);
   Result := AdaptRec(Node, VarName, A, B, Tol, Whole, FA, FM, FB, 20, Ctx, Err);
 end;
 

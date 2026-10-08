@@ -2,6 +2,43 @@
 
 A scientific computing application built in Free Pascal / Lazarus with a web target via Pas2JS.
 
+v0.1.0 — all 50 implementation phases complete. See
+[docs/sdlc/PROJECT-STATUS.md](docs/sdlc/PROJECT-STATUS.md),
+[ROADMAP.md](ROADMAP.md), and [CHANGELOG.md](CHANGELOG.md).
+
+## What it does
+
+- Scientific calculation (console `pmscalc`, Lazarus GUI, browser)
+- Expression parsing with implicit multiplication and a single AST
+- CAS: simplification, differentiation, integration, equation solving
+- Matrices, statistics, probability, units
+- Interactive 2D/3D graphing with sliders and analysis tools
+- Versioned sessions with URL-hash sharing, desktop and web
+- Offline-first PWA; no backend, no accounts
+
+## Quick start
+
+Desktop (Windows/Linux with Lazarus):
+
+```sh
+python scripts/build.py            # console + LCL app
+./bin/pmscalc "2 + 3 * 4"          # -> 14
+# or open bin/pmstudio(.exe)
+```
+
+Web (any static host):
+
+```sh
+python scripts/build_web.py        # needs pas2js 2.2.0, see docs/deployment/web.md
+cd app/web && python -m http.server
+```
+
+Quality gate (everything scripted):
+
+```sh
+python scripts/gate.py             # build + units + golden + web verify
+```
+
 ## Vision
 
 A genuine scientific-computing environment — not a student calculator — capable of:

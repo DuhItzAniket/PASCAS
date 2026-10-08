@@ -45,6 +45,25 @@ begin
   Result := Format('%.10g', [X]);
 end;
 
+{ All DOM writes go through innerHTML (textContent is unbound in this
+  RTL), so user-derived strings are escaped here. Computed results are
+  numeric/static, but escaping them too costs nothing. }
+function EscHTML(const S: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 1 to Length(S) do
+    case S[I] of
+      '&': Result := Result + '&amp;';
+      '<': Result := Result + '&lt;';
+      '>': Result := Result + '&gt;';
+      '"': Result := Result + '&quot;';
+    else
+      Result := Result + S[I];
+    end;
+end;
+
 procedure Persist; forward;
 procedure Replot; forward;
 procedure RefreshEntries; forward;
@@ -65,12 +84,12 @@ begin
   if Trim(Src) = '' then
     Exit(True);
   if EvalText(Src, Ctx, Val, E, P) then
-    El('out').innerHTML := Fmt(Val)
+    El('out').innerHTML := EscHTML(Fmt(Val))
   else if P > 0 then
-    El('out').innerHTML := 'Error (pos ' + IntToStr(P) + '): ' +
-      CalcErrorMessage(E)
+    El('out').innerHTML := EscHTML('Error (pos ' + IntToStr(P) + '): ' +
+      CalcErrorMessage(E))
   else
-    El('out').innerHTML := 'Error: ' + CalcErrorMessage(E);
+    El('out').innerHTML := EscHTML('Error: ' + CalcErrorMessage(E));
   Result := True;
 end;
 
@@ -222,7 +241,7 @@ begin
     Dot.setAttribute('style', 'background:' + Palette[WS.EntryColor(I) mod 8]);
     Txt := TJSHTMLElement(document.createElement('span'));
     Txt.className := 'etext';
-    Txt.innerHTML := WS.EntryText(I);
+    Txt.innerHTML := EscHTML(WS.EntryText(I));
     Hide := TJSHTMLElement(document.createElement('button'));
     Hide.setAttribute('data-i', IntToStr(I));
     Hide.setAttribute('data-a', 't');
@@ -280,7 +299,7 @@ begin
     Row := TJSHTMLElement(document.createElement('div'));
     Row.className := 'slider';
     Lab := TJSHTMLElement(document.createElement('span'));
-    Lab.innerHTML := Pb.Name;
+    Lab.innerHTML := EscHTML(Pb.Name);
     Inp := TJSHTMLInputElement(document.createElement('input'));
     Inp.setAttribute('type', 'range');
     Inp.setAttribute('min', FloatToStr(Pb.Lo));
@@ -339,8 +358,8 @@ begin
   Idx := WS.AddExpr(TJSHTMLInputElement(El('plotexpr')).value, wkFuncY, E, P);
   if Idx < 0 then
   begin
-    El('out').innerHTML := 'Plot error (pos ' + IntToStr(P) + '): ' +
-      CalcErrorMessage(E);
+    El('out').innerHTML := EscHTML('Plot error (pos ' + IntToStr(P) + '): ' +
+      CalcErrorMessage(E));
     Exit(True);
   end;
   TJSHTMLInputElement(El('plotexpr')).value := '';

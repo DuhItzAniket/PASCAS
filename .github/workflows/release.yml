@@ -1,0 +1,47 @@
+name: Release
+
+# Maintainer flow: bump PMSVersion, update CHANGELOG, then
+#   git tag vX.Y.Z; git push origin vX.Y.Z
+# Desktop binaries are built on maintainer machines
+# (scripts/package.py) and attached to the release manually.
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    name: Test, package web, publish release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install FPC
+        run: sudo apt-get update && sudo apt-get install -y fpc python3
+
+      - name: Install pas2js 2.2.0 (pinned, with RTL)
+        run: |
+          cd /tmp
+          curl -sSL -o p2js.zip https://downloads.freepascal.org/fpc/contrib/pas2js/2.2.0/pas2js-linux-2.2.0.zip
+          unzip -q p2js.zip
+
+      - name: Full gate (build + units + golden + web verify)
+        run: |
+          export PAS2JS_EXE=/tmp/pas2js-linux-2.2.0/bin/x86_64-linux/pas2js
+          python3 scripts/build.py
+          python3 scripts/runtests.py
+          python3 scripts/golden.py
+          python3 scripts/verify_web.py
+          python3 scripts/build_web.py
+          python3 scripts/package.py --web-only
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            dist/pascalmath-web-*.zip \
+            --title "PascalMath Studio ${{ github.ref_name }}" \
+            --generate-notes

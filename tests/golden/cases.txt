@@ -1,8 +1,20 @@
-# Golden mathematical cases: "<expr> = <expected>" (float compare with tolerance).
+# Golden mathematical cases.
+# [eval]: "<expr> = <expected>" verified through the shipped pmscalc
+# binary (tolerance-aware). Symbolic cases live with their unit tests:
+#   d/dx(x^2) = 2*x        -> test_cas (PMS.DiffSym golden)
+#   det([[1,2],[3,4]]) = -2 -> test_matrix (MDet golden)
+[eval]
 2 + 2 = 4
 2 + 3 * 4 = 14
 sin(pi/2) = 1
 sqrt(25) = 5
 1/3 + 1/6 = 1/2
-d/dx(x^2) = 2*x
-det([[1,2],[3,4]]) = -2
+2^3^2 = 512
+-2^2 = -4
+5! = 120
+7 mod 3 = 1
+ln(e) = 1
+log(100) = 2
+cbrt(27) = 3
+phi = 1.61803398874989
+2pi = 6.28318530717959

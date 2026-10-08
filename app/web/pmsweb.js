@@ -4365,6 +4365,27 @@ rtl.module("program",["System","SysUtils","JS","Web","PMS.AppName","PMS.Types","
     Result = pas.SysUtils.Format("%.10g",pas.System.VarRecs(3,X));
     return Result;
   };
+  this.EscHTML = function (S) {
+    var Result = "";
+    var I = 0;
+    Result = "";
+    for (var $l = 1, $end = S.length; $l <= $end; $l++) {
+      I = $l;
+      var $tmp = S.charAt(I - 1);
+      if ($tmp === "&") {
+        Result = Result + "&amp;"}
+       else if ($tmp === "<") {
+        Result = Result + "&lt;"}
+       else if ($tmp === ">") {
+        Result = Result + "&gt;"}
+       else if ($tmp === '"') {
+        Result = Result + "&quot;"}
+       else {
+        Result = Result + S.charAt(I - 1);
+      };
+    };
+    return Result;
+  };
   this.Evaluate = function (Event) {
     var Result = false;
     var Src = "";
@@ -4386,10 +4407,10 @@ rtl.module("program",["System","SysUtils","JS","Web","PMS.AppName","PMS.Types","
       }, set: function (v) {
         P = v;
       }})) {
-      $mod.El("out").innerHTML = $mod.Fmt(Val)}
+      $mod.El("out").innerHTML = $mod.EscHTML($mod.Fmt(Val))}
      else if (P > 0) {
-      $mod.El("out").innerHTML = "Error (pos " + pas.SysUtils.IntToStr(P) + "): " + pas["PMS.Types"].CalcErrorMessage(E)}
-     else $mod.El("out").innerHTML = "Error: " + pas["PMS.Types"].CalcErrorMessage(E);
+      $mod.El("out").innerHTML = $mod.EscHTML("Error (pos " + pas.SysUtils.IntToStr(P) + "): " + pas["PMS.Types"].CalcErrorMessage(E))}
+     else $mod.El("out").innerHTML = $mod.EscHTML("Error: " + pas["PMS.Types"].CalcErrorMessage(E));
     Result = true;
     return Result;
   };
@@ -4581,7 +4602,7 @@ rtl.module("program",["System","SysUtils","JS","Web","PMS.AppName","PMS.Types","
       Dot.setAttribute("style","background:" + $mod.Palette[$mod.WS.EntryColor(I) % 8]);
       Txt = document.createElement("span");
       Txt.className = "etext";
-      Txt.innerHTML = $mod.WS.EntryText(I);
+      Txt.innerHTML = $mod.EscHTML($mod.WS.EntryText(I));
       Hide = document.createElement("button");
       Hide.setAttribute("data-i",pas.SysUtils.IntToStr(I));
       Hide.setAttribute("data-a","t");
@@ -4634,7 +4655,7 @@ rtl.module("program",["System","SysUtils","JS","Web","PMS.AppName","PMS.Types","
       Row = document.createElement("div");
       Row.className = "slider";
       Lab = document.createElement("span");
-      Lab.innerHTML = Pb.Name;
+      Lab.innerHTML = $mod.EscHTML(Pb.Name);
       Inp = document.createElement("input");
       Inp.setAttribute("type","range");
       Inp.setAttribute("min",pas.SysUtils.FloatToStr(Pb.Lo));
@@ -4696,7 +4717,7 @@ rtl.module("program",["System","SysUtils","JS","Web","PMS.AppName","PMS.Types","
         P = v;
       }});
     if (Idx < 0) {
-      $mod.El("out").innerHTML = "Plot error (pos " + pas.SysUtils.IntToStr(P) + "): " + pas["PMS.Types"].CalcErrorMessage(E);
+      $mod.El("out").innerHTML = $mod.EscHTML("Plot error (pos " + pas.SysUtils.IntToStr(P) + "): " + pas["PMS.Types"].CalcErrorMessage(E));
       return true;
     };
     $mod.El("plotexpr").value = "";
