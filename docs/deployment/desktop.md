@@ -3,7 +3,10 @@
 ## Requirements
 
 - Lazarus with bundled FPC (dev machine: `C:\lazarus`, FPC 3.2.2 +
-  lazbuild 4.8). CI installs `lazarus` via apt.
+  lazbuild 4.8). CI installs `lazarus` via apt **plus `libgtk2.0-dev`
+  and `libx11-dev`** — without those linker symlinks the LCL-GTK2
+  build dies at link time (12s of compiling, then `ld: cannot find
+  -lgtk-x11-2.0`).
 - Python 3 for orchestration scripts only.
 
 ## Build
