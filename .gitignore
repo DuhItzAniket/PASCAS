@@ -37,7 +37,10 @@ desktop.ini
 build/
 out/
 dist/
-bin/
+# Build output (bin/ itself is tracked via .gitkeep so fresh clones build;
+# artifacts inside stay ignored)
+bin/*
+!bin/.gitkeep
 
 # Python helpers (orchestration only)
 __pycache__/

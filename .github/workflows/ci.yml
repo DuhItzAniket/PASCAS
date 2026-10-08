@@ -55,7 +55,9 @@ jobs:
         # without them lazbuild dies at link time).
         run: sudo apt-get update && sudo apt-get install -y lazarus libgtk2.0-dev libx11-dev python3
       - name: Build LCL app
-        run: lazbuild app/desktop/pmstudio.lpi
+        run: |
+          mkdir -p bin
+          lazbuild app/desktop/pmstudio.lpi
 
   build-web:
     name: Build + verify web (pas2js + Node)
