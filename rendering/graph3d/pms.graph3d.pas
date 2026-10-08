@@ -19,11 +19,14 @@ type
     ElevDeg: Double;  // elevation above XY plane (90 = top-down)
   end;
 
+  TDoubleRow = array of Double;
+  TBoolRow = array of Boolean;
+
   THeightField = record
     NX, NY: Integer;
     X0, X1, Y0, Y1: Double;
-    H: array of array of Double;
-    OK: array of array of Boolean;
+    H: array of TDoubleRow;
+    OK: array of TBoolRow;
   end;
 
 function P3Default: TView3D;

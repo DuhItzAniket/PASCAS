@@ -22,6 +22,9 @@ type
   TSampleLine = array of TSamplePt;
   TSampleLines = array of TSampleLine;
 
+  TGridRow = array of Double;
+  TGridFlagRow = array of Boolean;
+
 function SampleFunc(Node: TASTNode; const VarName: string;
   const V: TViewport; Ctx: TEvalContext; out Err: TCalcError): TSampleLine;
 function SampleParam(XNode, YNode: TASTNode; const TName: string;
@@ -203,8 +206,8 @@ procedure SampleImplicit(Node: TASTNode; const XName, YName: string;
   const V: TViewport; NX, NY: Integer; Ctx: TEvalContext;
   out Lines: TSampleLines; out Err: TCalcError);
 var
-  FX: array of array of Double;
-  FOK: array of array of Boolean;
+  FX: array of TGridRow;
+  FOK: array of TGridFlagRow;
   I, J: Integer;
   HadX, HadY: Boolean;
   OldX, OldY: Double;

@@ -11,7 +11,7 @@ unit PMS.Deps;
 interface
 
 uses
-  SysUtils, Classes, PMS.Types, PMS.AST, PMS.ASTUtils, PMS.Parser, PMS.Eval;
+  SysUtils, PMS.Types, PMS.AST, PMS.ASTUtils, PMS.Parser, PMS.Eval;
 
 type
   TDepKind = (dkVar, dkFunc);

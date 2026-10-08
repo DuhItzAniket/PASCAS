@@ -93,6 +93,28 @@ begin
     Result := PMSCeil(X - 0.5);
 end;
 
+{ pas2js 2.2 RTL lacks Tan/Sinh/Tanh: one-line identities, poles and
+  overflow handled by the caller's IsInfinite checks. }
+function PMSTan(X: Double): Double;
+begin
+  Result := Sin(X) / Cos(X);
+end;
+
+function PMSSinh(X: Double): Double;
+begin
+  Result := (Exp(X) - Exp(-X)) / 2;
+end;
+
+function PMSTanh(X: Double): Double;
+begin
+  if X > 20 then
+    Result := 1
+  else if X < -20 then
+    Result := -1
+  else
+    Result := (Exp(2 * X) - 1) / (Exp(2 * X) + 1);
+end;
+
 function ApplyFunc(const Name: string; X: Double; Ctx: TEvalContext;
   out Err: TCalcError): Double;
 var
@@ -106,7 +128,7 @@ begin
   else if L = 'cos' then
     Result := Cos(ToRad(X, Ctx.AngleMode))
   else if L = 'tan' then
-    Result := Tan(ToRad(X, Ctx.AngleMode))
+    Result := PMSTan(ToRad(X, Ctx.AngleMode))
   else if L = 'asin' then
   begin
     if Abs(X) > 1 then
@@ -128,11 +150,11 @@ begin
   else if L = 'atan' then
     Result := FromRad(ArcTan(X), Ctx.AngleMode)
   else if L = 'sinh' then
-    Result := Sinh(X)
+    Result := PMSSinh(X)
   else if L = 'cosh' then
     Result := Cosh(X)
   else if L = 'tanh' then
-    Result := Tanh(X)
+    Result := PMSTanh(X)
   else if L = 'ln' then
   begin
     if X <= 0 then

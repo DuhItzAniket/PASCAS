@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: Phase 41 — Professional UI/UX
+Last updated: Phase 44 — PWA / Offline Web Support
 
 ## Phase Tracking
 
@@ -47,6 +47,9 @@ Last updated: Phase 41 — Professional UI/UX
 | 39 | 3D Graphing | COMPLETE | feat(phases-32-39) | (in test_workspace) | lazbuild LINKED, smoke | PENDING |
 | 40 | Session Management and Sharing | COMPLETE | feat(phases-40-41) | 13/13 | OK | PENDING |
 | 41 | Professional UI/UX | COMPLETE | feat(phases-40-41) | smoke | lazbuild LINKED | PENDING |
+| 42 | Web Port Using Pascal + Pas2JS | COMPLETE | feat(phases-42-44) | Node verify + Chrome DOM | pas2js 2.2.0 | PENDING |
+| 43 | Web Desmos-style Experience | COMPLETE | feat(phases-42-44) | Chrome DOM | pas2js 2.2.0 | PENDING |
+| 44 | PWA / Offline Web Support | COMPLETE | feat(phases-42-44) | files served | pas2js 2.2.0 | PENDING |
 | 03 | Architecture and Technical Specification | NOT_STARTED | — | — | — | — |
 | 04 | Build System and Project Skeleton | NOT_STARTED | — | — | — | — |
 | 05 | CI Foundation | NOT_STARTED | — | — | — | — |

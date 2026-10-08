@@ -208,7 +208,7 @@ function QMake(V: Double; const U: string; out Q: TQty;
 var
   D: TDim;
   Scale, V2: Double;
-  Ui: Integer;
+  Ui, J: Integer;
   S: string;
 begin
   Result := False;
@@ -216,9 +216,11 @@ begin
   Ui := FindUnit(S);
   if Ui >= 0 then
   begin
-    // plain unit, offsets allowed
+    // plain unit, offsets allowed (element loop: pas2js cannot copy
+    // static arrays out of const records directly)
     Q.V := V * Units[Ui].Scale + Units[Ui].Off;
-    Q.D := Units[Ui].D;
+    for J := 0 to 6 do
+      Q.D[J] := Units[Ui].D[J];
     Err := ceNone;
     Exit(True);
   end;
@@ -293,9 +295,9 @@ end;
 function QConvert(const Q: TQty; const U: string; out V: Double;
   out Err: TCalcError): Boolean;
 var
-  D: TDim;
+  D, UD: TDim;
   Scale: Double;
-  Ui: Integer;
+  Ui, J: Integer;
   S: string;
 begin
   Result := False;
@@ -304,7 +306,9 @@ begin
   Ui := FindUnit(S);
   if Ui >= 0 then
   begin
-    if not SameDim(Q.D, Units[Ui].D) then
+    for J := 0 to 6 do
+      UD[J] := Units[Ui].D[J];
+    if not SameDim(Q.D, UD) then
     begin
       Err := ceDomain;
       Exit;
@@ -326,14 +330,17 @@ end;
 
 function AliasFor(const D: TDim): string;
 var
-  I: Integer;
+  I, J: Integer;
+  UD: TDim;
 begin
   // exact SI-coherent aliases (scale 1, no offset)
   for I := Low(Units) to High(Units) do
   begin
     if (Units[I].Name = '') or (Units[I].Off <> 0) or (Units[I].Scale <> 1) then
       Continue;
-    if SameDim(D, Units[I].D) then
+    for J := 0 to 6 do
+      UD[J] := Units[I].D[J];
+    if SameDim(D, UD) then
       Exit(Units[I].Name);
   end;
   Result := '';

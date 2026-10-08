@@ -44,9 +44,6 @@ jobs:
       - name: Run test runners
         run: python3 scripts/runtests.py
 
-  # Activated in later phases:
-  # build-web: pas2js compile (Phase 42)
-
   build-desktop:
     name: Build desktop LCL app (lazbuild)
     runs-on: ubuntu-latest
@@ -56,3 +53,19 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y lazarus python3
       - name: Build LCL app
         run: lazbuild app/desktop/pmstudio.lpi
+
+  build-web:
+    name: Build + verify web (pas2js + Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pas2js 2.2.0 (pinned, with RTL)
+        run: |
+          cd /tmp
+          curl -sSL -o p2js.zip https://downloads.freepascal.org/fpc/contrib/pas2js/2.2.0/pas2js-linux-2.2.0.zip
+          unzip -q p2js.zip
+          /tmp/pas2js-linux-2.2.0/bin/x86_64-linux/pas2js -iW
+      - name: Build web app
+        run: PAS2JS_EXE=/tmp/pas2js-linux-2.2.0/bin/x86_64-linux/pas2js python3 scripts/build_web.py
+      - name: Verify core-as-JS under Node
+        run: PAS2JS_EXE=/tmp/pas2js-linux-2.2.0/bin/x86_64-linux/pas2js python3 scripts/verify_web.py

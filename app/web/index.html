@@ -3,17 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#c00000">
 <title>PascalMath Studio</title>
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
 <body>
-<main id="app">
-  <h1>PascalMath Studio</h1>
-  <p id="status">Web shell skeleton (Phase 04). Pas2JS core wires up in Phase 42.</p>
-  <input id="expr" type="text" placeholder="2 + 3 * 4" aria-label="Expression">
-  <button id="eval">Evaluate</button>
-  <pre id="out"></pre>
+<header><h1>PascalMath Studio</h1><span id="ver"></span></header>
+<main>
+  <section id="calc">
+    <input id="expr" type="text" value="sin(pi/2)" aria-label="Expression"
+           placeholder="2 + 3 * 4" spellcheck="false">
+    <button id="eval" type="button">=</button>
+    <div id="out" aria-live="polite"></div>
+  </section>
+  <section id="plotrow">
+    <input id="plotexpr" type="text" value="sin(x)" aria-label="Plot expression"
+           placeholder="y = f(x)" spellcheck="false">
+    <button id="plot" type="button">Plot</button>
+    <button id="share" type="button">Copy link</button>
+    <button id="slidersbtn" type="button" title="Bind every variable to a slider">Sliders</button>
+  </section>
+  <div id="entries" aria-live="polite"></div>
+  <div id="sliders"></div>
+  <canvas id="graph" width="800" height="450"></canvas>
+  <input id="link" type="text" readonly aria-label="Share link" placeholder="share link appears here">
+  <div id="hint">drag to pan &middot; wheel to zoom &middot; click to inspect &middot; works offline</div>
 </main>
+<script src="rtl.js"></script>
 <script src="pmsweb.js"></script>
+<script>rtl.run();</script>
+<script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }</script>
 </body>
 </html>

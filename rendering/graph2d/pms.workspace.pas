@@ -141,7 +141,15 @@ var
   T1, T2: string;
 begin
   Result := -1;
-  FillChar(E, SizeOf(E), 0);
+  // explicit init (no FillChar/SizeOf: pas2js-clean and managed-safe)
+  E.Text := '';
+  E.AST1 := nil;
+  E.AST2 := nil;
+  E.ColorIdx := 0;
+  E.Visible := True;
+  E.CacheVer := -1;
+  SetLength(E.CacheLines, 0);
+  E.CacheV := VDefault(0, 0);
   E.Kind := Kind;
   E.VarX := KindVarX(Kind);
   E.VarY := '';

@@ -634,7 +634,8 @@ begin
 end;
 
 initialization
-  DotFS := DefaultFormatSettings;
+  // pas2js has no DefaultFormatSettings: pin up the fields we rely on
   DotFS.DecimalSeparator := '.';
+  DotFS.ThousandSeparator := ',';
 
 end.

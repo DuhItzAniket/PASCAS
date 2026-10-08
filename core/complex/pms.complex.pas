@@ -82,7 +82,22 @@ end;
 
 function CArg(const A: TComplex): Double;
 begin
-  Result := ArcTan2(A.Im, A.Re);
+  // ArcTan2 not in the pas2js RTL: quadrant logic over System.ArcTan
+  if A.Re > 0 then
+    Result := ArcTan(A.Im / A.Re)
+  else if A.Re < 0 then
+  begin
+    if A.Im >= 0 then
+      Result := ArcTan(A.Im / A.Re) + Pi
+    else
+      Result := ArcTan(A.Im / A.Re) - Pi;
+  end
+  else if A.Im > 0 then
+    Result := Pi / 2
+  else if A.Im < 0 then
+    Result := -Pi / 2
+  else
+    Result := 0;
 end;
 
 function CIsZero(const A: TComplex): Boolean;
@@ -147,13 +162,13 @@ end;
 function CSin(const A: TComplex): TComplex;
 begin
   Result.Re := Sin(A.Re) * Cosh(A.Im);
-  Result.Im := Cos(A.Re) * Sinh(A.Im);
+  Result.Im := Cos(A.Re) * (Exp(A.Im) - Exp(-A.Im)) / 2;
 end;
 
 function CCos(const A: TComplex): TComplex;
 begin
   Result.Re := Cos(A.Re) * Cosh(A.Im);
-  Result.Im := -Sin(A.Re) * Sinh(A.Im);
+  Result.Im := -Sin(A.Re) * (Exp(A.Im) - Exp(-A.Im)) / 2;
 end;
 
 function CPow(const A, B: TComplex; out Err: TCalcError): TComplex;
